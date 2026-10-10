@@ -8,6 +8,20 @@
 
 > *NOTE: This project started from June till the end of July 2025 and was delivered and handed over on 30th June 2025.*
 
+## Overview
+
+This project is a proof-of-concept real-time conversational voice agent for GP front-desk triage. It uses natural-language conversation to collect patient symptoms, run a structured diagnosis interview through the Inframedica Engine API, support appointment and general GP enquiries, and store relevant information through a FastAPI backend.
+
+The system was built with Pipecat, an LLM-based conversation flow, tool calling, and a FastAPI backend, then deployed on Cerebrium. It demonstrates that an AI voice agent can automate parts of GP front-desk workflows while escalating urgent or complex cases appropriately.
+
+## System Design & Flows
+
+The following documents describe how the voice agent manages conversations, interacts with backend services, and stores GP front-desk data.
+
+- [Conversation Flow](./resources/Conversation%20Flow.pdf): High-level state flow showing how the voice agent handles emergency, clinical, booking, and general-information scenarios.
+- [Database Design](./resources/GP%20Frontdesk%20ERD.html): ERD for the GP front-desk backend, showing the main data entities and their relationships.
+- [System Workflow](./resources/System%20Workflow.pdf): End-to-end pipeline showing how user speech is transcribed, processed by the LLM, used for tool calls, and converted back into speech.
+
 ## Getting started
 
 - Setup WSL in your windows if your are using windows or if you are in linux distro then you can skip this step (reason for WSL is becuse the `pipecat` framework internal dependency `daily-python` is not yet available in windows environment).
@@ -19,23 +33,27 @@
 
 > NOTE: Postman API collections exports are available in the `/postman-api-exports` directory which includes the env file and collections of APIs for backend service and Inframedica.
 
-## Project Status:
+## Project Status
 
-#### Current progress
-The current status or progress of the project is just a simple proof-of-concept implementation to validate the idea which includes:
+This repository contains a working proof of concept, not a production-ready medical system.
 
-- [x] Bot can be able to speak and understand natural language.
-- [x] Bot can be able to take symptoms and run diagnosis interview by leveraging `Inframedica Engine API`.
-- [x] Bot can access the database and maupulate (CRUD) database to store and retrive information.
-- [x] Deployed in cerebrium both backend service and voice bot service.
+### Delivered
 
-In conclusion the basic foundation of the project has been setup and done - what it means is Dr. Shafiq vision and conceptual ideas about automating the front desk of GP and optimizing the primary health care sector workflow works in practical as during this project we have acheieved all of the above conditions through this proof of concept voice bot.
+- [x] Real-time voice interaction using speech-to-text, LLM reasoning, and text-to-speech.
+- [x] Natural-language symptom collection and structured diagnosis interviews through the Inframedica Engine API.
+- [x] Conversation flows for emergency escalation, clinical triage, appointment booking, and general GP enquiries.
+- [x] FastAPI backend integration for storing and retrieving GP front-desk data.
+- [x] Deployment of both the voice agent and backend service on Cerebrium.
 
+### Outcome
 
-#### What next?
-This code samples are not the final and refined version of the voice bot imlementation and some codes are generated with the help of AI tools (cursor / calude) just to build the working prototype and is not ready for production or not even near production. This is barely scratching the surface of this ambitious project.
+The prototype validated the core idea: an AI voice agent can support GP front-desk triage and administrative workflows. It provides a practical foundation for a more robust, secure, and production-oriented implementation.
 
-Next steps would be understanding the fundamental system design and architecture and implementing it properly into new project by taking this proof of concept as reference.
+## Development Notes
+
+This was a time-boxed internship prototype. Parts of the implementation were accelerated using AI-assisted development tools, with the overall system design, integration, testing, debugging, and deployment carried out as part of the project delivery.
+
+The codebase is intended as a reference implementation rather than production software.
 
 
 ## Things to consider:
