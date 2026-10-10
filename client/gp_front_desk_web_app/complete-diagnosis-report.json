@@ -1,0 +1,2080 @@
+[
+    [
+        {
+            "role": "system",
+            "content": "#Role: You are Lucy, a helpful and polite General practice assistant. Respond in clear and concise way and avoid using special characters and emojis and remember you are speaking with an actual human so make sure you maintain natural conversation flow by making your response short, clear and concise. Don't make assumptions about what values to plug into functions. Ask for clarification if a user response is ambiguous. CRITICAL: - Only respond ONCE after function calls complete. Do NOT repeat greetings or responses. - While responding temperature units of measurement use appropriate pronounciation for each units like \"90°C to Ninety Degree Celsius\" or \"90°F to Ninety Degree Fahrenheit\". - Be creative and polite while asking questions yet still making it clear and accurate with the actual information for patients to understand better."
+        },
+        {
+            "role": "system",
+            "content": "#Task: 1. First call get_patient_data function and wait for completion 2. Second call start_call_session function and wait for completion 3. Then call check_time function and wait for completion 4. After BOTH functions complete, greet the patient with \"Good [morning, afternoon, evening] [first name]\" 5. Introduce yourself briefly 6. And ask how you can help them IMPORTANT: - Execute functions SEQUENTIALLY, not in parallel - Do NOT generate responses until ALL required data is available - Do NOT repeat the greeting - After initial setup, wait for patient response To help the patient: - call get_general_practice_information function to provide information about the GP - call book_an_appointment function to book an appointment with GP - call run_symptoms_intake_assessment function if patient reports feeling unwell or mentions symptoms CRITICAL: If patient mentions feeling unwell, symptoms, or health concerns, IMMEDIATELY call run_symptoms_intake_assessment. If patient wants to end the conversation call to_end_conversation function."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_dQxRLY9BEz0YuIG4mTrbw8rT",
+                    "function": {
+                        "name": "get_patient_data",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"fullname\": \"Himmat Rai\", \"dob\": \"1999-05-18\", \"age\": 26, \"gender\": \"Male\", \"symptoms\": \"\", \"conditions\": \"\", \"phone\": \"9860867453\", \"address\": \"Bede Hall, Leicester, LE2 7EQ\", \"emergency_contact_name\": \"Bob Miller\", \"emergency_contact_phone\": \"9867897645\", \"patient_id\": 3, \"user_id\": 5, \"created_at\": \"2025-07-15T18:16:45\", \"updated_at\": null}",
+            "tool_call_id": "call_dQxRLY9BEz0YuIG4mTrbw8rT"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_dO7ZyTASQeGVJwPdD1ij2AzU",
+                    "function": {
+                        "name": "start_call_session",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Call session None started for patient 3\", \"data\": {\"error\": \"Request failed: 400 Client Error: Bad Request for url: http://localhost:8000/api/v1/call-sessions/\"}}",
+            "tool_call_id": "call_dO7ZyTASQeGVJwPdD1ij2AzU"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_rdZAErvT0RmNtFxT3jMC6kI1",
+                    "function": {
+                        "name": "check_time",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "\"01:04:36 AM\"",
+            "tool_call_id": "call_rdZAErvT0RmNtFxT3jMC6kI1"
+        },
+        {
+            "role": "assistant",
+            "content": "Good morning Himmat. I am Lucy, your gen eral practice assistant. How can I help you today?"
+        },
+        {
+            "role": "user",
+            "content": "Hello, Lucy. I'm not feeling well today."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_NaNAcIVVmR733889MDPrHErI",
+                    "function": {
+                        "name": "run_symptoms_intake_assessment",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Transitioning to symptoms assessment conversation.\"}",
+            "tool_call_id": "call_NaNAcIVVmR733889MDPrHErI"
+        },
+        {
+            "role": "system",
+            "content": "#Tasks: 1. Ask how the patient is feeling or what specific symptoms they are experiencing. 2. Once you have specific symptoms mentioned by the patient, FIRST call parse_text function with: - text: the patient's symptom description - age: patient's age (from session data) - sex: patient's biological sex (from session data) 3. THEN call suggest function with: - age: patient's age - sex: patient's biological sex - evidence: list of evidence objects from parse_text result 4. From the suggested symptoms list, ask about each symptom seperately one at a time. 5. After each patient response, call store_evidence function ONLY if patient CONFIRMS they have that symptom. IMPORTANT FUNCTION CALLS: For parse_text: ``` parse_text( text=\"patient's symptom description here\", age=40, sex=\"male\" ) ``` For suggest (after getting evidence from parse_text): ``` suggest( age=40, sex=\"male\", evidence=[{\"id\": \"symptom_id\", \"choice_id\": \"present\", \"source\": \"initial\"}] ) ``` For store_evidence (when patient confirms symptom): ``` store_evidence( evidence={ \"id\": \"symptom_id_from_suggestions\", \"choice_id\": \"present\", \"source\": \"suggest\" } ) ``` CRITICAL RULES: - ALWAYS call parse_text BEFORE suggest when patient mentions specific symptoms - Use patient's age and sex from the session data (available from previous get_patient_data call) - ONLY call store_evidence AFTER patient CONFIRMS they have a specific symptom - Don't assume symptoms - ask for clarification if patient gives vague responses - The evidence parameter in suggest must be a list of evidence objects from parse_text - When storing evidence, choice_id should be \"present\", \"absent\", or \"unknown\" WORKFLOW: 1. Patient mentions symptoms → parse_text 2. Get evidence from parse_text → suggest with that evidence 3. Ask about each suggested symptom individually 4. Patient confirms/denies → store_evidence if confirmed 5. Continue until all symptoms checked 6. Thank patient → call run_diagnosis_assessment If patient wants to end conversation, call to_end_conversation function."
+        },
+        {
+            "role": "user",
+            "content": "Hello Lucy, I'm not feeling well today."
+        },
+        {
+            "role": "assistant",
+            "content": "I'm sorry to hear that. Can you please descri be how you are feeling or what specific symptoms you are experiencing?"
+        },
+        {
+            "role": "user",
+            "content": "I have a itchy eye. On my right. Eye."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_VMaqACpWYDvBa5EXUn6KqcCd",
+                    "function": {
+                        "name": "process_text",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "CANCELLED",
+            "tool_call_id": "call_VMaqACpWYDvBa5EXUn6KqcCd"
+        },
+        {
+            "role": "user",
+            "content": "I have an itchy eye on my right eye."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_4SXIy2BMkuol2sE6Wjzj7Aei",
+                    "function": {
+                        "name": "process_text",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"mentions\": [{\"id\": \"s_1563\", \"name\": \"Itching eye\", \"orth\": \"itchy eye\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [24, 25], \"head_position\": 25, \"common_name\": \"Itchy eye\"}, {\"id\": \"s_1563\", \"name\": \"Itching eye\", \"orth\": \"itchy eye on my right eye\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [36, 37, 38, 39, 40, 41], \"head_position\": 37, \"common_name\": \"Itchy eye\"}], \"obvious\": false, \"tokens\": [\"Hello\", \",\", \"Lucy\", \".\", \"I\", \"'m\", \"not\", \"feeling\", \"well\", \"today\", \".\", \"Hello\", \"Lucy\", \",\", \"I\", \"'m\", \"not\", \"feeling\", \"well\", \"today\", \".\", \"I\", \"have\", \"a\", \"itchy\", \"eye\", \".\", \"On\", \"my\", \"right\", \".\", \"Eye\", \".\", \"I\", \"have\", \"an\", \"itchy\", \"eye\", \"on\", \"my\", \"right\", \"eye\", \".\"]}",
+            "tool_call_id": "call_4SXIy2BMkuol2sE6Wjzj7Aei"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_p9ABz8OxCUyPl81LpBt3W6ig",
+                    "function": {
+                        "name": "suggest_symptoms",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "[{\"id\": \"s_241\", \"name\": \"Dermatological changes\", \"common_name\": \"Skin changes\"}, {\"id\": \"s_122\", \"name\": \"Excessive tear production\", \"common_name\": \"Watery eyes\"}, {\"id\": \"s_1090\", \"name\": \"Glassy eyes\", \"common_name\": \"Glassy eyes\"}, {\"id\": \"s_492\", \"name\": \"Red eye\", \"common_name\": \"Red eye\"}, {\"id\": \"s_2141\", \"name\": \"Eye discharge\", \"common_name\": \"Eye discharge\"}, {\"id\": \"s_201\", \"name\": \"Feeling of sand under eyelids\", \"common_name\": \"Feeling of sand under eyelids\"}]",
+            "tool_call_id": "call_p9ABz8OxCUyPl81LpBt3W6ig"
+        },
+        {
+            "role": "assistant",
+            "content": "You mentioned having an itchy eye. Here are some related symptoms I would like to ask you about:\n 1. Have you experienced any dermatological changes, like skin changes around your eye?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_dVDb9rLikQXNRbiBf0LPQV8n",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_241\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_241 recorded as absent\"}",
+            "tool_call_id": "call_dVDb9rLikQXNRbiBf0LPQV8n"
+        },
+        {
+            "role": "user",
+            "content": "I know."
+        },
+        {
+            "role": "assistant",
+            "content": "Have you experienced excessive tear production or watery eyes?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah. Sometimes."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_1MTTOBcHEyV4mvpYI3pBPfcB",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_122\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_122 recorded as unknown\"}",
+            "tool_call_id": "call_1MTTOBcHEyV4mvpYI3pBPfcB"
+        },
+        {
+            "role": "user",
+            "content": "Yeah, sometimes."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_2lNQakjgPOjBjX8HkLpxBKJf",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_122\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_122 recorded as present\"}",
+            "tool_call_id": "call_2lNQakjgPOjBjX8HkLpxBKJf"
+        },
+        {
+            "role": "assistant",
+            "content": "Have you noticed any glassy eyes?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_lqPbJUecJRR88wmWwLwYOJBj",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1090\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1090 recorded as present\"}",
+            "tool_call_id": "call_lqPbJUecJRR88wmWwLwYOJBj"
+        },
+        {
+            "role": "user",
+            "content": "Yeah"
+        },
+        {
+            "role": "assistant",
+            "content": "Have you experienced any redness in your eye?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_2lDLBxRYBlqXAe4JdJZJBWWg",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_492\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_492 recorded as present\"}",
+            "tool_call_id": "call_2lDLBxRYBlqXAe4JdJZJBWWg"
+        },
+        {
+            "role": "assistant",
+            "content": "Have you had any eye discharge?"
+        },
+        {
+            "role": "user",
+            "content": "Mike. What kind of discharge"
+        },
+        {
+            "role": "assistant",
+            "content": "I mean any discharge from your eye, such as mucus or fluid.  Have you experienced that?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_RmGRhGjpTdFhnTzI3d1M9tXG",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2141\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2141 recorded as absent\"}",
+            "tool_call_id": "call_RmGRhGjpTdFhnTzI3d1M9tXG"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "content": "Have you felt a sens ation of sand under your eyelids?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_uUj56co1kv6MSfrXXxlqeux7",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_201\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_201 recorded as absent\"}",
+            "tool_call_id": "call_uUj56co1kv6MSfrXXxlqeux7"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_YWPheZ8kJXsUYASO48VQ6mOH",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_201\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_201 recorded as absent\"}",
+            "tool_call_id": "call_YWPheZ8kJXsUYASO48VQ6mOH"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_8DSf1jGz5WoSYRkUe4KW9bQB",
+                    "function": {
+                        "name": "run_diagnosis_assessment",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Transitioning to diagnosis assessment conversation.\"}",
+            "tool_call_id": "call_8DSf1jGz5WoSYRkUe4KW9bQB"
+        },
+        {
+            "role": "system",
+            "content": "#Task: Dynamic Medical Interview Based on Question Types You are conducting a medical interview using the Inframedica API. The API returns different types of questions that require different handling approaches. ## DETAILED EXAMPLE CONVERSATIONS: ### SINGLE TYPE EXAMPLE: API Response: { \"question\": { \"type\": \"single\", \"text\": \"Does the pain increase when you touch or press on the area around your ear?\", \"items\": [{\"id\": \"s_476\", \"name\": \"Pain increases when touching ear area\"}] } } Conversation Flow: Bot: \"Does the pain increase when you touch or press on the area around your ear?\" Patient: \"Yes, it does hurt more when I touch it\" Bot calls: store_evidence({\"id\": \"s_476\", \"choice_id\": \"present\"}) Bot calls: run_diagnosis() → Continue to next question ### GROUP_SINGLE TYPE EXAMPLE: API Response: { \"question\": { \"type\": \"group_single\", \"text\": \"What is your body temperature?\", \"items\": [ {\"id\": \"s_99\", \"name\": \"Between 99.5 and 101 °F (37 and 38 °C)\"}, {\"id\": \"s_100\", \"name\": \"Above 101 °F (38 °C)\"} ] } } Conversation Flow: Bot: \"What is your body temperature? Is it between 99.5 and 101 degrees Fahrenheit?\" Patient: \"No, it's higher than that\" Bot calls: store_evidence({\"id\": \"s_99\", \"choice_id\": \"absent\"}) Bot: \"Is your temperature above 101 degrees Fahrenheit?\" Patient: \"Yes, I think so\" Bot calls: store_evidence({\"id\": \"s_100\", \"choice_id\": \"present\"}) Bot calls: run_diagnosis() → Continue to next question ### GROUP_MULTIPLE TYPE EXAMPLE: API Response: { \"question\": { \"type\": \"group_multiple\", \"text\": \"How would you describe your headache?\", \"items\": [ {\"id\": \"s_25\", \"name\": \"Pulsing or throbbing\"}, {\"id\": \"s_604\", \"name\": \"Feels like 'stabbing' or 'drilling'\"}, {\"id\": \"s_23\", \"name\": \"Feels like pressure around my head\"} ] } } Conversation Flow: Bot: \"How would you describe your headache? Is it pulsing or throbbing?\" Patient: \"Yes, it's definitely pulsing\" Bot calls: store_evidence({\"id\": \"s_25\", \"choice_id\": \"present\"}) Bot: \"Does it feel like stabbing or drilling?\" Patient: \"No, not really\" Bot calls: store_evidence({\"id\": \"s_604\", \"choice_id\": \"absent\"}) Bot: \"Does it feel like pressure around your head?\" Patient: \"Yes, there's pressure too\" Bot calls: store_evidence({\"id\": \"s_23\", \"choice_id\": \"present\"}) Bot calls: run_diagnosis() → Continue to next question ## CONVERSATION FLOW RULES: 1. **Always start with run_diagnosis()** to get the question 2. **Check question type** and handle accordingly 3. **For single**: Ask once, get answer, store evidence, continue 4. **For group_single**: Ask about each item until patient says \"yes\" to one, mark others as \"absent\" 5. **For group_multiple**: Ask about each item individually, store each response 6. **After completing a question** (all items asked), call run_diagnosis() again 7. **Continue until** should_stop is true or error occurs ## IMPORTANT RESPONSE MAPPING: - Positive responses: \"Yes\", \"Yeah\", \"Uh-huh\", \"That's right\", \"Correct\" → \"present\" - Negative responses: \"No\", \"Nope\", \"Not really\", \"That's not it\" → \"absent\" - Uncertain responses: \"Don't know\", \"Maybe\", \"I'm not sure\", \"Could be\" → \"unknown\" ## CONVERSATION STATE TRACKING: - Keep track of which items in a group question you've asked about - For group_single: Ensure exactly one item is marked as \"present\" - For group_multiple: Ask about ALL items in the group - Don't repeat questions or skip items ## ERROR RECOVERY: - If patient gives unclear response, ask for clarification - If you get confused about question type, call run_diagnosis() again - Always be patient and conversational - Never end the interview due to technical issues - always retry ## END CONDITIONS: - When run_diagnosis returns should_stop: true - When API returns error - When patient requests to end conversation ## INTERRUPTION RESILIENCE: If the user speaks while you're processing: 1. Acknowledge their input if needed 2. Continue with the current question 3. If a function was cancelled, retry it immediately 4. Do not restart the entire interview Remember: Be natural and conversational while following the technical requirements for each question type. If patient wants to end the conversation call to_end_conversation function."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_35pmxcN8YFlaEddjq5ozGqtF",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"Is one or both eyes red?\", \"items\": [{\"id\": \"s_2577\", \"name\": \"Only one eye\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2524\", \"name\": \"Both eyes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"Is one or both eyes red?\", \"items\": [{\"id\": \"s_2577\", \"name\": \"Only one eye\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2524\", \"name\": \"Both eyes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_35pmxcN8YFlaEddjq5ozGqtF"
+        },
+        {
+            "role": "assistant",
+            "content": "Thank you for providi ng the information about your symptoms. I will now proceed wi th the diagnosis Is one or both of you r eyes assessment."
+        },
+        {
+            "role": "assistant",
+            "content": "red? Is it only one eye?"
+        },
+        {
+            "role": "user",
+            "content": "Just one year."
+        },
+        {
+            "role": "user",
+            "content": "Just one year."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_uXWzvudI75xvt4QiqMdYGutA",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2577\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2577 recorded as present\"}",
+            "tool_call_id": "call_uXWzvudI75xvt4QiqMdYGutA"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_OFUptazI0yHV4Vqk7BB7zOxV",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2524\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2524 recorded as absent\"}",
+            "tool_call_id": "call_OFUptazI0yHV4Vqk7BB7zOxV"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_UMExpto5rhNiGhfbIQKdt0ay",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Have you recently had any physical trauma or injury?\", \"items\": [{\"id\": \"p_264\", \"name\": \"Reported physical injury\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Have you recently had any physical trauma or injury?\", \"items\": [{\"id\": \"p_264\", \"name\": \"Reported physical injury\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_UMExpto5rhNiGhfbIQKdt0ay"
+        },
+        {
+            "role": "assistant",
+            "content": "Have you recently had any physical trauma or injury?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_hgXqCMW0zVodBL30aYlWytD2",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"p_264\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom p_264 recorded as absent\"}",
+            "tool_call_id": "call_hgXqCMW0zVodBL30aYlWytD2"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_nU1DdRoVORD4qxHqQv0QE4LC",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a sore throat?\", \"items\": [{\"id\": \"s_20\", \"name\": \"Pharyngeal pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a sore throat?\", \"items\": [{\"id\": \"s_20\", \"name\": \"Pharyngeal pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_nU1DdRoVORD4qxHqQv0QE4LC"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a sore throat?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_UrtqhcJ2CQDZHuxqasRczNyP",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_20\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_20 recorded as absent\"}",
+            "tool_call_id": "call_UrtqhcJ2CQDZHuxqasRczNyP"
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_TnqJuZONB3j3jvqatlMXCvBF",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a headache?\", \"items\": [{\"id\": \"s_21\", \"name\": \"Headache\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a headache?\", \"items\": [{\"id\": \"s_21\", \"name\": \"Headache\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_TnqJuZONB3j3jvqatlMXCvBF"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a headache?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_QFlx2tpLAbMQzj0RbdGHGGOf",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_21\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_21 recorded as absent\"}",
+            "tool_call_id": "call_QFlx2tpLAbMQzj0RbdGHGGOf"
+        },
+        {
+            "role": "user",
+            "content": "Now"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_vfuSIEUUOxF3uiYluuydIlF6",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you wear contact lenses?\", \"items\": [{\"id\": \"p_139\", \"name\": \"Contact lenses\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you wear contact lenses?\", \"items\": [{\"id\": \"p_139\", \"name\": \"Contact lenses\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_vfuSIEUUOxF3uiYluuydIlF6"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you wear contact lenses?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_RFDx9FeU3UALfoeIKz1zF0rq",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"p_139\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom p_139 recorded as absent\"}",
+            "tool_call_id": "call_RFDx9FeU3UALfoeIKz1zF0rq"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_vKRAyBL7Sr2B2hjsoPHZgVzZ",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are there white spots or cloudy areas on your cornea, i.e., the clear part of the eye that covers the iris and pupil?\", \"items\": [{\"id\": \"s_1796\", \"name\": \"White patch on cornea\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are there white spots or cloudy areas on your cornea, i.e., the clear part of the eye that covers the iris and pupil?\", \"items\": [{\"id\": \"s_1796\", \"name\": \"White patch on cornea\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_vKRAyBL7Sr2B2hjsoPHZgVzZ"
+        },
+        {
+            "role": "assistant",
+            "content": "Are there white spo ts or cloudy areas on your cornea, which is the clear part of the eye that covers the iris and pupil?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_kus5dBYIA43whE3G9MdUaJ6B",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1796\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1796 recorded as absent\"}",
+            "tool_call_id": "call_kus5dBYIA43whE3G9MdUaJ6B"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_hHxc66QdOyUXwS4k3bsekfXy",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you get muscle spasms or cramps in your face, for example, in your forehead or around your eyes or mouth?\", \"items\": [{\"id\": \"s_1425\", \"name\": \"Facial muscle spasms\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you get muscle spasms or cramps in your face, for example, in your forehead or around your eyes or mouth?\", \"items\": [{\"id\": \"s_1425\", \"name\": \"Facial muscle spasms\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_hHxc66QdOyUXwS4k3bsekfXy"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you get muscle spa sms or cramps in your face, for example, in your forehead or around your eyes or mouth?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_tSm7JvrGIbiIaGTUWQUGFwos",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1425\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1425 recorded as absent\"}",
+            "tool_call_id": "call_tSm7JvrGIbiIaGTUWQUGFwos"
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_3Xkb0oObtDbqd3TqluemoAFN",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are your eyelids twitching?\", \"items\": [{\"id\": \"s_235\", \"name\": \"Eyelid twitching\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are your eyelids twitching?\", \"items\": [{\"id\": \"s_235\", \"name\": \"Eyelid twitching\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_3Xkb0oObtDbqd3TqluemoAFN"
+        },
+        {
+            "role": "assistant",
+            "content": "Are your eyelids twitching?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_YGSvXuVYrTBbo9N5OQZY5Oz3",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_235\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_235 recorded as absent\"}",
+            "tool_call_id": "call_YGSvXuVYrTBbo9N5OQZY5Oz3"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_FriV6elP9SsTw5HScsQE3rTP",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a runny nose?\", \"items\": [{\"id\": \"s_107\", \"name\": \"Nasal catarrh\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a runny nose?\", \"items\": [{\"id\": \"s_107\", \"name\": \"Nasal catarrh\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_FriV6elP9SsTw5HScsQE3rTP"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a runny nose?"
+        },
+        {
+            "role": "user",
+            "content": "No. No."
+        },
+        {
+            "role": "user",
+            "content": "No, no."
+        },
+        {
+            "role": "user",
+            "content": "Man."
+        },
+        {
+            "role": "user",
+            "content": "Amen. Okay."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_TXYQm6hgwLweZ1eCRC5EwJqC",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_107\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_107 recorded as absent\"}",
+            "tool_call_id": "call_TXYQm6hgwLweZ1eCRC5EwJqC"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_cVeTkirkWayS7iaVEL0GRESc",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are your pupils different sizes?\", \"items\": [{\"id\": \"s_497\", \"name\": \"Anisocoria\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are your pupils different sizes?\", \"items\": [{\"id\": \"s_497\", \"name\": \"Anisocoria\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_cVeTkirkWayS7iaVEL0GRESc"
+        },
+        {
+            "role": "assistant",
+            "content": "Are your pupils diffe rent sizes?"
+        },
+        {
+            "role": "user",
+            "content": "And I don't know."
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_oHpmSlT1IdYgZZRMbO21oiAU",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_497\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_497 recorded as unknown\"}",
+            "tool_call_id": "call_oHpmSlT1IdYgZZRMbO21oiAU"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_bp3mSJK6d3CRThq4pYPbkfnl",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Have you noticed a bright red patch on the white part of either of your eyes recently?\", \"items\": [{\"id\": \"s_3307\", \"name\": \"Blood in eye\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Have you noticed a bright red patch on the white part of either of your eyes recently?\", \"items\": [{\"id\": \"s_3307\", \"name\": \"Blood in eye\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_bp3mSJK6d3CRThq4pYPbkfnl"
+        },
+        {
+            "role": "assistant",
+            "content": "Have you noticed a br ight red patch on the white part of either of your eyes recently?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_iOKUzQymUFUD7aSuDf65SPkP",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_3307\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_3307 recorded as absent\"}",
+            "tool_call_id": "call_iOKUzQymUFUD7aSuDf65SPkP"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_f9WsX6JsxhkJYvXxlFJPFeAk",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Is any part of your body swollen?\", \"items\": [{\"id\": \"s_700\", \"name\": \"Edema\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Is any part of your body swollen?\", \"items\": [{\"id\": \"s_700\", \"name\": \"Edema\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_f9WsX6JsxhkJYvXxlFJPFeAk"
+        },
+        {
+            "role": "assistant",
+            "content": "Is any part of your b ody swollen?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_B0aLLgupiBcgPbQGoJaphL38",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_700\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_700 recorded as absent\"}",
+            "tool_call_id": "call_B0aLLgupiBcgPbQGoJaphL38"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ngaXhmVE1YdgF0HflVwASltT",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are you having trouble closing your eyes?\", \"items\": [{\"id\": \"s_3206\", \"name\": \"Eye closure difficulties\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are you having trouble closing your eyes?\", \"items\": [{\"id\": \"s_3206\", \"name\": \"Eye closure difficulties\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_ngaXhmVE1YdgF0HflVwASltT"
+        },
+        {
+            "role": "assistant",
+            "content": "Are you having troubl e closing your eyes?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Ji6CKxhAIFmKkax6BwYEnWba",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_3206\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_3206 recorded as absent\"}",
+            "tool_call_id": "call_Ji6CKxhAIFmKkax6BwYEnWba"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_8vIQtCaMqfeGGfYwUo8XpovV",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Does either of your eyes hurt?\", \"items\": [{\"id\": \"s_493\", \"name\": \"Eye pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Does either of your eyes hurt?\", \"items\": [{\"id\": \"s_493\", \"name\": \"Eye pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_8vIQtCaMqfeGGfYwUo8XpovV"
+        },
+        {
+            "role": "assistant",
+            "content": "Does either of your eyes hurt?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_QTVHOtN1nDqCWkQT5tV7uCap",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_493\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_493 recorded as absent\"}",
+            "tool_call_id": "call_QTVHOtN1nDqCWkQT5tV7uCap"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_XYzTUHYMxY2J721dx1MpLLne",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are your eyes dry?\", \"items\": [{\"id\": \"s_2094\", \"name\": \"Dry eyes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are your eyes dry?\", \"items\": [{\"id\": \"s_2094\", \"name\": \"Dry eyes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_XYzTUHYMxY2J721dx1MpLLne"
+        },
+        {
+            "role": "assistant",
+            "content": "Are your eyes dry?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_hIizSdHrtmNTt1Fr2kiGZGYx",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2094\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2094 recorded as present\"}",
+            "tool_call_id": "call_hIizSdHrtmNTt1Fr2kiGZGYx"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_eN3kAhj0KWvVvaNZjRp3UylA",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a stuffy nose?\", \"items\": [{\"id\": \"s_331\", \"name\": \"Nasal congestion\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a stuffy nose?\", \"items\": [{\"id\": \"s_331\", \"name\": \"Nasal congestion\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_eN3kAhj0KWvVvaNZjRp3UylA"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a stuffy nose?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_q8B3CR6jBS4DP77W7ZlyLYnI",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_331\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_331 recorded as absent\"}",
+            "tool_call_id": "call_q8B3CR6jBS4DP77W7ZlyLYnI"
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_b2CThcqyvkQRQfV5hwrXIUoB",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do your eyelids droop, making it difficult for you to keep your eyes open?\", \"items\": [{\"id\": \"s_192\", \"name\": \"Blepharoptosis\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do your eyelids droop, making it difficult for you to keep your eyes open?\", \"items\": [{\"id\": \"s_192\", \"name\": \"Blepharoptosis\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_b2CThcqyvkQRQfV5hwrXIUoB"
+        },
+        {
+            "role": "assistant",
+            "content": "Do your eyelids dr oop, making it difficult for you to keep your eyes open?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_T2rUYsEF8cpc373oaiWITygA",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_192\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_192 recorded as present\"}",
+            "tool_call_id": "call_T2rUYsEF8cpc373oaiWITygA"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Vg8SxooJgOu1PjeYfaUvgbgY",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How long have you had problems with droopping eyelids?\", \"items\": [{\"id\": \"s_2508\", \"name\": \"Less than 7 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2511\", \"name\": \"7 or more days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How long have you had problems with droopping eyelids?\", \"items\": [{\"id\": \"s_2508\", \"name\": \"Less than 7 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2511\", \"name\": \"7 or more days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_Vg8SxooJgOu1PjeYfaUvgbgY"
+        },
+        {
+            "role": "assistant",
+            "content": "How long have you had problems with drooping eyelids? Is  it less than 7 days?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah. Less than seven days."
+        },
+        {
+            "role": "user",
+            "content": "Yeah, less than seven days."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_4SutuSDX2o9NiljotcCM4FFB",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2508\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2508 recorded as present\"}",
+            "tool_call_id": "call_4SutuSDX2o9NiljotcCM4FFB"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_InDTlrMdCdTzlRvXtsUO1KjL",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2511\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2511 recorded as absent\"}",
+            "tool_call_id": "call_InDTlrMdCdTzlRvXtsUO1KjL"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_IL4YQ1vuMVdc8OQWZf1VTECv",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are both of your pupils unusually small or constricted?\", \"items\": [{\"id\": \"s_537\", \"name\": \"Miosis\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are both of your pupils unusually small or constricted?\", \"items\": [{\"id\": \"s_537\", \"name\": \"Miosis\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_IL4YQ1vuMVdc8OQWZf1VTECv"
+        },
+        {
+            "role": "assistant",
+            "content": "Are both of your pupi ls unusually small or constricted?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_kKi3rsZd5zNPnbHUPI7ZDYhd",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_537\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_537 recorded as unknown\"}",
+            "tool_call_id": "call_kKi3rsZd5zNPnbHUPI7ZDYhd"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_VS2GENQvl6doPNehtHib9KT2",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have double vision?\", \"items\": [{\"id\": \"s_207\", \"name\": \"Diplopia\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have double vision?\", \"items\": [{\"id\": \"s_207\", \"name\": \"Diplopia\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_VS2GENQvl6doPNehtHib9KT2"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have double vision?"
+        },
+        {
+            "role": "user",
+            "content": "No idea."
+        },
+        {
+            "role": "user",
+            "content": "No idea."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ZL9nWULDTTZKb0hnCZU5kyV8",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_207\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_207 recorded as unknown\"}",
+            "tool_call_id": "call_ZL9nWULDTTZKb0hnCZU5kyV8"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_bM4FLhugSY3X1yDPexk30mtI",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are the irises of your eyes different colors, or does either iris have more than one color?\", \"items\": [{\"id\": \"s_2546\", \"name\": \"Heterochromic irides\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are the irises of your eyes different colors, or does either iris have more than one color?\", \"items\": [{\"id\": \"s_2546\", \"name\": \"Heterochromic irides\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_bM4FLhugSY3X1yDPexk30mtI"
+        },
+        {
+            "role": "assistant",
+            "content": "Are the irises of you r eyes different colors, or does either iris have more than one color?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_6RIbnJ9lU8p4WYUCyBryHijf",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2546\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2546 recorded as unknown\"}",
+            "tool_call_id": "call_6RIbnJ9lU8p4WYUCyBryHijf"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ZH61D1LyjZFdEzhz8AwjFL61",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a cough?\", \"items\": [{\"id\": \"s_102\", \"name\": \"Cough\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a cough?\", \"items\": [{\"id\": \"s_102\", \"name\": \"Cough\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_ZH61D1LyjZFdEzhz8AwjFL61"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a cough?"
+        },
+        {
+            "role": "user",
+            "content": "Sorry?"
+        },
+        {
+            "role": "user",
+            "content": "Sorry."
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a cough?"
+        },
+        {
+            "role": "user",
+            "content": "Cough like what?"
+        },
+        {
+            "role": "user",
+            "content": "Golf like what?"
+        },
+        {
+            "role": "assistant",
+            "content": "I mean a cough as in a sudden, forceful expulsion of air from the lungs. Do  you experience that?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "Now,"
+        },
+        {
+            "role": "user",
+            "content": "I'm not a child"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_oxkNbHhkJVYGKFrrZZSO3z8z",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_102\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_102 recorded as absent\"}",
+            "tool_call_id": "call_oxkNbHhkJVYGKFrrZZSO3z8z"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_1BZwZSdKMqDrSpYRzlgiLMXD",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are you having trouble breathing, and you can't catch your breath or breathe in enough air?\", \"items\": [{\"id\": \"s_88\", \"name\": \"Dyspnea\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are you having trouble breathing, and you can't catch your breath or breathe in enough air?\", \"items\": [{\"id\": \"s_88\", \"name\": \"Dyspnea\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_1BZwZSdKMqDrSpYRzlgiLMXD"
+        },
+        {
+            "role": "assistant",
+            "content": "Are you having troubl e breathing, and can't catch your breath or breathe in enough air?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_YnxfRJhKCkPZSCJOmbzeRsO1",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_88\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_88 recorded as absent\"}",
+            "tool_call_id": "call_YnxfRJhKCkPZSCJOmbzeRsO1"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_8CHCfcx28HasL89YwFdCIR3a",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Does your neck hurt?\", \"items\": [{\"id\": \"s_1483\", \"name\": \"Neck pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Does your neck hurt?\", \"items\": [{\"id\": \"s_1483\", \"name\": \"Neck pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_8CHCfcx28HasL89YwFdCIR3a"
+        },
+        {
+            "role": "assistant",
+            "content": "Does your neck hurt?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "Please No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_adKuIDHfDFaqkxH5slzAmjs0",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1483\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1483 recorded as absent\"}",
+            "tool_call_id": "call_adKuIDHfDFaqkxH5slzAmjs0"
+        },
+        {
+            "role": "user",
+            "content": "Please."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_3z2Mna8f9DpkIWcqcyHnPyfe",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have pain in any part of your face?\", \"items\": [{\"id\": \"s_478\", \"name\": \"Facial pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have pain in any part of your face?\", \"items\": [{\"id\": \"s_478\", \"name\": \"Facial pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_3z2Mna8f9DpkIWcqcyHnPyfe"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_QiIsd64c9bo3L5Qpg8HyfyAK",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have pain in any part of your face?\", \"items\": [{\"id\": \"s_478\", \"name\": \"Facial pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have pain in any part of your face?\", \"items\": [{\"id\": \"s_478\", \"name\": \"Facial pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_QiIsd64c9bo3L5Qpg8HyfyAK"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have pain in a ny part of your face?"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have pain in a ny"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_9xQMSCHjKQrGEeriTGrLGuEH",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_478\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_478 recorded as absent\"}",
+            "tool_call_id": "call_9xQMSCHjKQrGEeriTGrLGuEH"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_6inS2juNAw0Mvyl90rtAL6Fc",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Is there a blind spot in your vision, or do you see black spots or patches in front of your eyes?\", \"items\": [{\"id\": \"s_124\", \"name\": \"Scotoma\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Is there a blind spot in your vision, or do you see black spots or patches in front of your eyes?\", \"items\": [{\"id\": \"s_124\", \"name\": \"Scotoma\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_6inS2juNAw0Mvyl90rtAL6Fc"
+        },
+        {
+            "role": "assistant",
+            "content": "Is there a blind sp ot in your vision, or do you see black spots or patches in front of your eyes?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_miZ3sNzPIO5TuKxnHGk3CB4N",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_124\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_124 recorded as unknown\"}",
+            "tool_call_id": "call_miZ3sNzPIO5TuKxnHGk3CB4N"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_78maKkisf8FacosEwFL8dJ1r",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Has your face suddenly become red and flushed?\", \"items\": [{\"id\": \"s_1067\", \"name\": \"Sudden face flushing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Has your face suddenly become red and flushed?\", \"items\": [{\"id\": \"s_1067\", \"name\": \"Sudden face flushing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_78maKkisf8FacosEwFL8dJ1r"
+        },
+        {
+            "role": "assistant",
+            "content": "Has your face suddenl y become red and flushed?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_wCRlc5nU8WS7O24VXCM2yVoS",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1067\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1067 recorded as absent\"}",
+            "tool_call_id": "call_wCRlc5nU8WS7O24VXCM2yVoS"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_KS4Id3CfSfuRmimRfu8RnlWM",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do either of your eyeballs look like they are out of place, pushed forward, or sunken in?\", \"items\": [{\"id\": \"s_3286\", \"name\": \"Displacement of orbit\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do either of your eyeballs look like they are out of place, pushed forward, or sunken in?\", \"items\": [{\"id\": \"s_3286\", \"name\": \"Displacement of orbit\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_KS4Id3CfSfuRmimRfu8RnlWM"
+        },
+        {
+            "role": "assistant",
+            "content": "Do either of your eye balls look like they are out of place, pushed forward, or sunken in?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_UaLQCmwe1DPpOeUC8YyUnFlq",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_3286\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_3286 recorded as absent\"}",
+            "tool_call_id": "call_UaLQCmwe1DPpOeUC8YyUnFlq"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_vDih5SiKHOiak23L7nRKscQQ",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have trouble moving either eye?\", \"items\": [{\"id\": \"s_3303\", \"name\": \"Limited eye movement\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have trouble moving either eye?\", \"items\": [{\"id\": \"s_3303\", \"name\": \"Limited eye movement\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_vDih5SiKHOiak23L7nRKscQQ"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have trouble m oving either eye?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_IxymFzdtiTO2adwmVBtou52l",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_3303\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_3303 recorded as absent\"}",
+            "tool_call_id": "call_IxymFzdtiTO2adwmVBtou52l"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_WvmVXBSqZIkPiMNXW6toKErk",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have difficulty speaking?\", \"items\": [{\"id\": \"s_2754\", \"name\": \"Speech and language impairment\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have difficulty speaking?\", \"items\": [{\"id\": \"s_2754\", \"name\": \"Speech and language impairment\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_WvmVXBSqZIkPiMNXW6toKErk"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have difficult y speaking?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_UPTMzHSBWa3B8yeZaXjv7XmB",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2754\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2754 recorded as absent\"}",
+            "tool_call_id": "call_UPTMzHSBWa3B8yeZaXjv7XmB"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_4sdoKvfGnyFsqGhvI3HvUzZt",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Is it difficult for you to tell how far away things are?\", \"items\": [{\"id\": \"s_501\", \"name\": \"Distance misjudgment\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Is it difficult for you to tell how far away things are?\", \"items\": [{\"id\": \"s_501\", \"name\": \"Distance misjudgment\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_4sdoKvfGnyFsqGhvI3HvUzZt"
+        },
+        {
+            "role": "assistant",
+            "content": "Is it difficult for y ou to tell how far away things are?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_1bFfbBDjGuEuM4f1EKliuOgb",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_501\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_501 recorded as absent\"}",
+            "tool_call_id": "call_1bFfbBDjGuEuM4f1EKliuOgb"
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_DwBe1VYnU43RJTtRCUu8bmiK",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Is your skin greasy or oily?\", \"items\": [{\"id\": \"s_362\", \"name\": \"Oily skin\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Is your skin greasy or oily?\", \"items\": [{\"id\": \"s_362\", \"name\": \"Oily skin\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_DwBe1VYnU43RJTtRCUu8bmiK"
+        },
+        {
+            "role": "assistant",
+            "content": "Is your skin greasy or oily?"
+        },
+        {
+            "role": "user",
+            "content": "In what area?"
+        },
+        {
+            "role": "user",
+            "content": "In what area?"
+        },
+        {
+            "role": "assistant",
+            "content": "I mean generally, is your skin overall greasy or oily?"
+        },
+        {
+            "role": "user",
+            "content": "I I I guess it's kind of early."
+        },
+        {
+            "role": "user",
+            "content": "I guess it's kind of oily."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_2YvOfhgRCcatfRCUqrLuwRlB",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_362\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_362 recorded as present\"}",
+            "tool_call_id": "call_2YvOfhgRCcatfRCUqrLuwRlB"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_3FQBlbIIRi2eVGKXzl07Fmei",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"complete\", \"message\": \"Diagnosis interview complete\", \"should_stop\": true, \"final_response\": {\"question\": null, \"conditions\": [{\"id\": \"c_998\", \"name\": \"Dry eye disease\", \"common_name\": \"Dry eye syndrome\", \"probability\": 0.2337}, {\"id\": \"c_216\", \"name\": \"Uveitis\", \"common_name\": \"Uveitis\", \"probability\": 0.0355}, {\"id\": \"c_892\", \"name\": \"Keratitis\", \"common_name\": \"Keratitis\", \"probability\": 0.034}, {\"id\": \"c_174\", \"name\": \"Corneal abrasion\", \"common_name\": \"Scratched eye\", \"probability\": 0.0318}, {\"id\": \"c_3\", \"name\": \"Allergic conjunctivitis\", \"common_name\": \"Allergic conjunctivitis\", \"probability\": 0.015}], \"extras\": {}, \"has_emergency_evidence\": false, \"should_stop\": true, \"interview_token\": \"eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJQYXRpZW50RWR1Y2F0aW9uUmV2aXNpb25zIiwidG9rZW5QYXlsb2FkIjp7ImFnZUJ1bmRsZSI6IkFEVUxUIiwicGF0aWVudEVkdWNhdGlvblJldmlzaW9ucyI6eyJjXzk5OCI6IjgiLCJjXzMiOiI2In19LCJpYXQiOjE3NTM0ODg4NjF9.lMb4a6SinLGWvlUMoSytsaZ61CTKcIbqsKsP8Jhfcq8\"}}",
+            "tool_call_id": "call_3FQBlbIIRi2eVGKXzl07Fmei"
+        }
+    ]
+]

@@ -1,0 +1,39 @@
+[cerebrium.deployment]
+name = "voice-agent"
+python_version = "3.12"
+docker_base_image_url = "debian:bookworm-slim"
+disable_auth = true
+include = ["*"]
+exclude = [
+    '.*',
+    '__pycache__/',
+    '*.pyc',
+    '*.db',
+    'backend/',
+    '.env',
+    'requirements.txt',
+]
+
+# custom runetime for starting backend server 
+# [cerebrium.runtime.custom]
+# port = 8000
+# entrypoint = ["bash", "startup.sh"]
+# healthcheck_endpoint = "/health"
+# readycheck_endpoint = "/ready"
+
+[cerebrium.hardware]
+region = "us-east-1"
+provider = "aws"
+compute = "CPU"
+cpu = 6
+memory = 18.0
+
+[cerebrium.scaling]
+min_replicas = 1
+max_replicas = 3
+cooldown = 30
+replica_concurrency = 10
+scaling_metric = "concurrency_utilization"
+
+[cerebrium.dependencies.paths]
+pip = "requirements.txt"

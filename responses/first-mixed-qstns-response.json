@@ -1,0 +1,772 @@
+[
+    [
+        {
+            "role": "system",
+            "content": "\n#Role:\nYou are Lucy, a helpful and polite General practice assistant. Respond in clear and concise way and \navoid using special characters and emojis and remember you are speaking with an actual human so make sure you maintain \nnatural conversation flow by making your response short, clear and concise.\nDon't make assumptions about what values to plug into functions. \nAsk for clarification if a user response is ambiguous.\n                \nCRITICAL: Only respond ONCE after function calls complete. Do NOT repeat greetings or responses.\n"
+        },
+        {
+            "role": "system",
+            "content": "\n#Task:\n1.First retrive patient information by calling get_patient_data funciton.\n2.Greet the patient saying \"Good [morning, afternoon, evening] [first name].\n3.Introduce yourself briefly. \n4.And ask how you can help them.\n                \nIMPORTANT: \n- Do NOT call get_patient_data multiple times\n- Do NOT repeat the greeting\n- After initial setup, wait for patient response\n                \nTo help the patient:\n- call get_general_practice_information function to provide information about the GP\n- call book_an_appointment function to book an appointment with GP\n- call run_symptoms_intake_assessment function if patient reports feeling unwell or mentions symptoms\n                \nCRITICAL: If patient mentions feeling unwell, symptoms, or health concerns, IMMEDIATELY call run_symptoms_intake_assessment.\n                \nIf patient wants to end the conversation call to_end_conversation function.\n"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_TdKkmLAVScek7FTUfdblncoP",
+                    "function": {
+                        "name": "get_patient_data",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"patient_id\": \"p_001\", \"name\": \"Shafiq Shafi\", \"age\": 40, \"date_of_birth\": \"18/05/1976\", \"sex\": \"male\", \"phone\": \"9860867234\", \"address\": \"Bede Hall, Le2 7EQ, Leicester\", \"emergency_contact_name\": \"Bob Miller\", \"emergency_contact_phone\": \"9860876534\", \"symptoms\": [], \"conditions\": [], \"created_at\": \"\", \"updated_at\": \"\"}",
+            "tool_call_id": "call_TdKkmLAVScek7FTUfdblncoP"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_bz7Ny6bN2jez3FVjazQA2zZP",
+                    "function": {
+                        "name": "check_time",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "\"02:54:56 AM\"",
+            "tool_call_id": "call_bz7Ny6bN2jez3FVjazQA2zZP"
+        },
+        {
+            "role": "assistant",
+            "content": "Good morning, Shafiq. I am Lucy, your gen eral practice assistant. How can I assist you today?"
+        },
+        {
+            "role": "user",
+            "content": "Hello, Lucy. So I'm not feeling well today. I've got headache."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_tByAZUdmwAvSGZ2Ld7YWbdyj",
+                    "function": {
+                        "name": "run_symptoms_intake_assessment",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Transitioning to symptoms assessment conversation.\"}",
+            "tool_call_id": "call_tByAZUdmwAvSGZ2Ld7YWbdyj"
+        },
+        {
+            "role": "system",
+            "content": "\n#Tasks:\n1. Ask how the patient is feeling or what specific symptoms they are experiencing.\n2. Once you have specific symptoms or have gathered initial information, FIRST call process_text function to extract and parse these symptoms. \n3. THEN call suggest_symptoms function to get additional symptoms to ask about.\n3. From the suggested symptoms list, ask a question on each symptom one at a time and take in patient response then move on to next one.\n4. After each patient response, call store_evidence function only if the patient confirms they have that symptom.\n                \n                \nIMPORTANT: \n- ALWAYS call process_text BEFORE suggest_symptoms when patient mentions specific symptoms\n- ONLY call store_evidence function AFTER patient CONFIRMS they have that specific symptom.\n- Don't assume symptoms if patient only says general statements like \"not feeling well\"\n- If patient only says general statements like \"not feeling well\", ask specific follow-up questions like \"What specific symptoms are you experiencing?\" or \"Can you tell me more about what's bothering you?\"\n- Only proceed to suggest_symptoms after you have parsed specific symptoms\n                \nWhen calling store_evidence, the evidence object should be passed directly (not nested):\n```\nstore_evidence({\n        \"id\": \"symptom_id_here\",\n        \"choice_id\": \"present\",\n        \"source\": \"suggest\"\n})\n```\n                \nReplace \"symptom_id_here\" with the actual symptom ID from the suggested symptoms list.\n                \n6. Continue until you finish asking all symptoms-based questions from the list.\n7. After completing suggested symptoms Q&A session, thank patient for providing information and call run_diagnosis_assessment function.\n                \nIf patient wants to end the conversation, call to_end_conversation function.\n                \n"
+        },
+        {
+            "role": "user",
+            "content": "Hello Lucy, so I'm not feeling well today. I've got headache."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_fa2nLDY1FV5tdIa8jauYn9SR",
+                    "function": {
+                        "name": "process_text",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"mentions\": [{\"id\": \"s_21\", \"name\": \"Headache\", \"orth\": \"headache\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [15], \"head_position\": 15, \"common_name\": \"Headache\"}, {\"id\": \"s_21\", \"name\": \"Headache\", \"orth\": \"headache\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [31], \"head_position\": 31, \"common_name\": \"Headache\"}], \"obvious\": false, \"tokens\": [\"Hello\", \",\", \"Lucy\", \".\", \"So\", \"I\", \"'m\", \"not\", \"feeling\", \"well\", \"today\", \".\", \"I\", \"'ve\", \"got\", \"headache\", \".\", \"Hello\", \"Lucy\", \",\", \"so\", \"I\", \"'m\", \"not\", \"feeling\", \"well\", \"today\", \".\", \"I\", \"'ve\", \"got\", \"headache\", \".\"]}",
+            "tool_call_id": "call_fa2nLDY1FV5tdIa8jauYn9SR"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_H88lyQJKQPIb8d59tvLtb7IF",
+                    "function": {
+                        "name": "suggest_symptoms",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "[{\"id\": \"s_2100\", \"name\": \"Fatigue\", \"common_name\": \"Fatigue\"}, {\"id\": \"s_156\", \"name\": \"Nausea\", \"common_name\": \"Feeling sick or queasy\"}]",
+            "tool_call_id": "call_H88lyQJKQPIb8d59tvLtb7IF"
+        },
+        {
+            "role": "assistant",
+            "content": "Thank you for sharing that. Besides the headache, are you experiencing any fatigue?"
+        },
+        {
+            "role": "assistant",
+            "content": "Thank you for sharing that. Besides the headache, are you experiencing any fatigue?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Um yeah"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Idw5Fm1WsZMnm32GJWshSc08",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2100\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2100 recorded as present\"}",
+            "tool_call_id": "call_Idw5Fm1WsZMnm32GJWshSc08"
+        },
+        {
+            "role": "assistant",
+            "content": "Thank you. Are you also experie ncing any nausea or feeling sick?"
+        },
+        {
+            "role": "user",
+            "content": "Can you elaborate more on that?"
+        },
+        {
+            "role": "assistant",
+            "content": "Certainly, nausea is a sensation of unease and discomfort in the stomach, often accompanied by an urge to vomit.  Are you experiencing anything like that?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_vNHeqQywuTu7oHlTmJWyaqN8",
+                    "function": {
+                        "name": "run_diagnosis_assessment",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Transitioning to diagnisis assessment conversation.\"}",
+            "tool_call_id": "call_vNHeqQywuTu7oHlTmJWyaqN8"
+        },
+        {
+            "role": "system",
+            "content": "\n#Task: Dynamic Medical Interview Based on Question Types\n                \nYou are conducting a medical interview using the Inframedica API. The API returns different types of questions that require different handling approaches.\n                \n\n## DETAILED EXAMPLE CONVERSATIONS:\n\n### SINGLE TYPE EXAMPLE:\nAPI Response:\n{\n  \"question\": {\n    \"type\": \"single\",\n    \"text\": \"Does the pain increase when you touch or press on the area around your ear?\",\n    \"items\": [{\"id\": \"s_476\", \"name\": \"Pain increases when touching ear area\"}]\n  }\n}\n\nConversation Flow:\nBot: \"Does the pain increase when you touch or press on the area around your ear?\"\nPatient: \"Yes, it does hurt more when I touch it\"\nBot calls: store_evidence({\"id\": \"s_476\", \"choice_id\": \"present\"})\nBot calls: run_diagnosis() → Continue to next question\n\n### GROUP_SINGLE TYPE EXAMPLE:\nAPI Response:\n{\n  \"question\": {\n    \"type\": \"group_single\", \n    \"text\": \"What is your body temperature?\",\n    \"items\": [\n      {\"id\": \"s_99\", \"name\": \"Between 99.5 and 101 °F (37 and 38 °C)\"},\n      {\"id\": \"s_100\", \"name\": \"Above 101 °F (38 °C)\"}\n    ]\n  }\n}\n\nConversation Flow:\nBot: \"What is your body temperature? Is it between 99.5 and 101 degrees Fahrenheit?\"\nPatient: \"No, it's higher than that\"\nBot calls: store_evidence({\"id\": \"s_99\", \"choice_id\": \"absent\"})\nBot: \"Is your temperature above 101 degrees Fahrenheit?\"\nPatient: \"Yes, I think so\"\nBot calls: store_evidence({\"id\": \"s_100\", \"choice_id\": \"present\"})\nBot calls: run_diagnosis() → Continue to next question\n\n### GROUP_MULTIPLE TYPE EXAMPLE:\nAPI Response:\n{\n  \"question\": {\n    \"type\": \"group_multiple\",\n    \"text\": \"How would you describe your headache?\",\n    \"items\": [\n      {\"id\": \"s_25\", \"name\": \"Pulsing or throbbing\"},\n      {\"id\": \"s_604\", \"name\": \"Feels like 'stabbing' or 'drilling'\"},\n      {\"id\": \"s_23\", \"name\": \"Feels like pressure around my head\"}\n    ]\n  }\n}\n\nConversation Flow:\nBot: \"How would you describe your headache? Is it pulsing or throbbing?\"\nPatient: \"Yes, it's definitely pulsing\"\nBot calls: store_evidence({\"id\": \"s_25\", \"choice_id\": \"present\"})\nBot: \"Does it feel like stabbing or drilling?\"\nPatient: \"No, not really\"\nBot calls: store_evidence({\"id\": \"s_604\", \"choice_id\": \"absent\"})\nBot: \"Does it feel like pressure around your head?\"\nPatient: \"Yes, there's pressure too\"\nBot calls: store_evidence({\"id\": \"s_23\", \"choice_id\": \"present\"})\nBot calls: run_diagnosis() → Continue to next question\n\n## CONVERSATION FLOW RULES:\n\n1. **Always start with run_diagnosis()** to get the question\n2. **Check question type** and handle accordingly\n3. **For single**: Ask once, get answer, store evidence, continue\n4. **For group_single**: Ask about each item until patient says \"yes\" to one, mark others as \"absent\"\n5. **For group_multiple**: Ask about each item individually, store each response\n6. **After completing a question** (all items asked), call run_diagnosis() again\n7. **Continue until** should_stop is true or error occurs\n\n## IMPORTANT RESPONSE MAPPING:\n- Positive responses: \"Yes\", \"Yeah\", \"Uh-huh\", \"That's right\", \"Correct\" → \"present\"\n- Negative responses: \"No\", \"Nope\", \"Not really\", \"That's not it\" → \"absent\"  \n- Uncertain responses: \"Don't know\", \"Maybe\", \"I'm not sure\", \"Could be\" → \"unknown\"\n\n                \n## CONVERSATION STATE TRACKING:\n- Keep track of which items in a group question you've asked about\n- For group_single: Ensure exactly one item is marked as \"present\"\n- For group_multiple: Ask about ALL items in the group\n- Don't repeat questions or skip items\n                \n## ERROR RECOVERY:\n- If patient gives unclear response, ask for clarification\n- If you get confused about question type, call run_diagnosis() again\n- Always be patient and conversational\n                \n## END CONDITIONS:\n- When run_diagnosis returns should_stop: true\n- When API returns error\n- When patient requests to end conversation\n                \nRemember: Be natural and conversational while following the technical requirements for each question type.\n\nIf patient wants to end the conversation call to_end_conversation function.\n"
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_jV61N7MUIPKUhrDSbcrrCcV0",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How strong is the headache?\", \"items\": [{\"id\": \"s_1780\", \"name\": \"Mild\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1781\", \"name\": \"Moderate\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1193\", \"name\": \"Severe\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How strong is the headache?\", \"items\": [{\"id\": \"s_1780\", \"name\": \"Mild\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1781\", \"name\": \"Moderate\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1193\", \"name\": \"Severe\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 1}",
+            "tool_call_id": "call_jV61N7MUIPKUhrDSbcrrCcV0"
+        },
+        {
+            "role": "assistant",
+            "content": "How strong is the headache? Would you say it's mild?"
+        },
+        {
+            "role": "user",
+            "content": "Can you repeat it one more time?"
+        },
+        {
+            "role": "assistant",
+            "content": "Of course. How strong is the headache? Would you say it's mild?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Um, yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_AlTzdfWJHQcIHSyRvk9Q5PwH",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1780\", \"choice_id\": \"present\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1780 recorded as present\"}",
+            "tool_call_id": "call_AlTzdfWJHQcIHSyRvk9Q5PwH"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ruYkjUgixSn1tVnA9LhAZDHD",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a runny nose?\", \"items\": [{\"id\": \"s_107\", \"name\": \"Nasal catarrh\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a runny nose?\", \"items\": [{\"id\": \"s_107\", \"name\": \"Nasal catarrh\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 2}",
+            "tool_call_id": "call_ruYkjUgixSn1tVnA9LhAZDHD"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a runny nose?"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a runny nose?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Um, yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_p3zT4KX2rL4jSxyRpefi0qjh",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_107\", \"choice_id\": \"present\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_107 recorded as present\"}",
+            "tool_call_id": "call_p3zT4KX2rL4jSxyRpefi0qjh"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_9GmAkPuwa7rZSRLcVOs7dGcn",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How long has the runny nose lasted?\", \"items\": [{\"id\": \"s_2845\", \"name\": \"Less than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2846\", \"name\": \"More than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How long has the runny nose lasted?\", \"items\": [{\"id\": \"s_2845\", \"name\": \"Less than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2846\", \"name\": \"More than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 3}",
+            "tool_call_id": "call_9GmAkPuwa7rZSRLcVOs7dGcn"
+        },
+        {
+            "role": "assistant",
+            "content": "How long has the runn y nose lasted? Has it been less than 3 months?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_TMUBAe2kflIJc1e1nVID4FZC",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2845\", \"choice_id\": \"present\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2845 recorded as present\"}",
+            "tool_call_id": "call_TMUBAe2kflIJc1e1nVID4FZC"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Rl5KBkkwmHxcNhmJVO1jhcnC",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Do any of these make it physically hard or uncomfortable to speak?\", \"items\": [{\"id\": \"s_68\", \"name\": \"Hoarse or raspy voice\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_477\", \"name\": \"No sound comes out when trying to speak\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_95\", \"name\": \"Discomfort or pain in the lower half of the face or mouth while speaking\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Do any of these make it physically hard or uncomfortable to speak?\", \"items\": [{\"id\": \"s_68\", \"name\": \"Hoarse or raspy voice\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_477\", \"name\": \"No sound comes out when trying to speak\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_95\", \"name\": \"Discomfort or pain in the lower half of the face or mouth while speaking\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 4}",
+            "tool_call_id": "call_Rl5KBkkwmHxcNhmJVO1jhcnC"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a hoarse or raspy voice?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_JrusFyVppvZySzlHiDylsM34",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_68\", \"choice_id\": \"absent\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_68 recorded as absent\"}",
+            "tool_call_id": "call_JrusFyVppvZySzlHiDylsM34"
+        },
+        {
+            "role": "assistant",
+            "content": "Does no sound come ou t when you try to speak?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "Ah no."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_uEEciVrdTArjvolssPGRhT77",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_477\", \"choice_id\": \"absent\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_477 recorded as absent\"}",
+            "tool_call_id": "call_uEEciVrdTArjvolssPGRhT77"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you experience a ny discomfort or pain in the lower half of your face or mouth while speaking?"
+        },
+        {
+            "role": "user",
+            "content": "No. Um..."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_hKE17L3yGT9Y1Ow7DFj2F8kg",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_95\", \"choice_id\": \"absent\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_95 recorded as absent\"}",
+            "tool_call_id": "call_hKE17L3yGT9Y1Ow7DFj2F8kg"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_UNf0VsaP6SBVJUY2lXh6HHRA",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a cough?\", \"items\": [{\"id\": \"s_102\", \"name\": \"Cough\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a cough?\", \"items\": [{\"id\": \"s_102\", \"name\": \"Cough\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 5}",
+            "tool_call_id": "call_UNf0VsaP6SBVJUY2lXh6HHRA"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a cough?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "aiye."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_wLR2AkSwWVePtojuiPuuEDYq",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_102\", \"choice_id\": \"present\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_102 recorded as present\"}",
+            "tool_call_id": "call_wLR2AkSwWVePtojuiPuuEDYq"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_MnfyAEbl6mJbCubdHQduKBlC",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How would you describe the cough?\", \"items\": [{\"id\": \"s_105\", \"name\": \"Dry cough, without phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_104\", \"name\": \"Wet cough, with phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2268\", \"name\": \"Both a dry and wet cough, with phlegm or mucus appearing occasionally throughout the day\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How would you describe the cough?\", \"items\": [{\"id\": \"s_105\", \"name\": \"Dry cough, without phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_104\", \"name\": \"Wet cough, with phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2268\", \"name\": \"Both a dry and wet cough, with phlegm or mucus appearing occasionally throughout the day\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 6}",
+            "tool_call_id": "call_MnfyAEbl6mJbCubdHQduKBlC"
+        },
+        {
+            "role": "assistant",
+            "content": "How would you describ e the cough? Is it a dry cough, without phlegm or mucus?"
+        },
+        {
+            "role": "user",
+            "content": "Oh, yeah. Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Oh yeah, yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_WWD5UyVv1Zg9jIQhVudTfB4r",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_105\", \"choice_id\": \"present\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_105 recorded as present\"}",
+            "tool_call_id": "call_WWD5UyVv1Zg9jIQhVudTfB4r"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_LXVNHwWFCdjVmB9qGmAH8RHp",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How long have you had a cough?\", \"items\": [{\"id\": \"s_103\", \"name\": \"Less than 3 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1858\", \"name\": \"Between 3 and 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_106\", \"name\": \"More than 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How long have you had a cough?\", \"items\": [{\"id\": \"s_103\", \"name\": \"Less than 3 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1858\", \"name\": \"Between 3 and 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_106\", \"name\": \"More than 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 7}",
+            "tool_call_id": "call_LXVNHwWFCdjVmB9qGmAH8RHp"
+        },
+        {
+            "role": "assistant",
+            "content": "How long have you had the cough?  Has it been less than 3 weeks?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_V5B2WAOxmZFZGjyW36o82YOo",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_103\", \"choice_id\": \"absent\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_103 recorded as absent\"}",
+            "tool_call_id": "call_V5B2WAOxmZFZGjyW36o82YOo"
+        },
+        {
+            "role": "assistant",
+            "content": "Has the cough lasted between 3 and 8 weeks?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "Um, no."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_y7pWqUiUNVfMNA5HQK0olPxc",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1858\", \"choice_id\": \"absent\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1858 recorded as absent\"}",
+            "tool_call_id": "call_y7pWqUiUNVfMNA5HQK0olPxc"
+        },
+        {
+            "role": "assistant",
+            "content": "Has the cough lasted more than 8 weeks?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_lMTbrOS29YBSxge77Rgo56Q9",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_106\", \"choice_id\": \"absent\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_106 recorded as absent\"}",
+            "tool_call_id": "call_lMTbrOS29YBSxge77Rgo56Q9"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_vIFVMTmFsLUh6TTYOPthEMBd",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a cough during the night that sometimes wakes you up?\", \"items\": [{\"id\": \"s_1985\", \"name\": \"Cough, nocturnal\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a cough during the night that sometimes wakes you up?\", \"items\": [{\"id\": \"s_1985\", \"name\": \"Cough, nocturnal\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 8}",
+            "tool_call_id": "call_vIFVMTmFsLUh6TTYOPthEMBd"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a cough d uring the night that sometimes wakes you up?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_wwCQ3PqgYicslan0fKMLV4Yx",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1985\", \"choice_id\": \"present\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1985 recorded as present\"}",
+            "tool_call_id": "call_wwCQ3PqgYicslan0fKMLV4Yx"
+        },
+        {
+            "role": "user",
+            "content": "Um, yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_FJZGzUSTonxJq4Ec6kUgig6t",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are you having trouble breathing, and you can't catch your breath or breathe in enough air?\", \"items\": [{\"id\": \"s_88\", \"name\": \"Dyspnea\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are you having trouble breathing, and you can't catch your breath or breathe in enough air?\", \"items\": [{\"id\": \"s_88\", \"name\": \"Dyspnea\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 9}",
+            "tool_call_id": "call_FJZGzUSTonxJq4Ec6kUgig6t"
+        },
+        {
+            "role": "assistant",
+            "content": "Are you having troubl e breathing, and you can't catch your breath or breathe in enough air?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_tab2M4EKMdALQVgsYfMPkFfu",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_88\", \"choice_id\": \"absent\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_88 recorded as absent\"}",
+            "tool_call_id": "call_tab2M4EKMdALQVgsYfMPkFfu"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_EejSulEwugQcVqlfoWgDlJqU",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are any lymph glands swollen, such as those in the neck, behind the ears, under the arms, or anywhere else?\", \"items\": [{\"id\": \"s_220\", \"name\": \"Enlarged lymph nodes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are any lymph glands swollen, such as those in the neck, behind the ears, under the arms, or anywhere else?\", \"items\": [{\"id\": \"s_220\", \"name\": \"Enlarged lymph nodes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"question_count\": 10}",
+            "tool_call_id": "call_EejSulEwugQcVqlfoWgDlJqU"
+        }
+    ]
+]

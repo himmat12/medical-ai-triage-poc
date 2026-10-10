@@ -1,0 +1,440 @@
+{
+	"info": {
+		"_postman_id": "e56f7823-0791-41a7-b02e-374c333b0988",
+		"name": "Inframedica",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16590534"
+	},
+	"item": [
+		{
+			"name": "Engine API",
+			"item": [
+				{
+					"name": "diagonosis",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "0001",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sex\": \"male\",\r\n    \"age\": {\r\n        \"value\": 30\r\n    },\r\n    \"evidence\": [\r\n        {\r\n            \"id\": \"s_39\",\r\n            \"choice_id\": \"present\",\r\n            \"source\": \"initial\"\r\n        },\r\n        {\r\n            \"id\": \"s_182\",\r\n            \"choice_id\": \"absent\"\r\n        },\r\n        {\r\n            \"id\": \"s_369\",\r\n            \"choice_id\": \"absent\"\r\n        },\r\n        {\r\n            \"id\": \"s_690\",\r\n            \"choice_id\": \"present\"\r\n        },\r\n        {\r\n            \"id\": \"p_161\",\r\n            \"choice_id\": \"unknown\"\r\n        }\r\n    ],\r\n    \"extras\": {}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{engine_base_url}}/diagnosis",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"diagnosis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "conditions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "{{interview-id}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{engine_base_url}}/conditions?age.value=26",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"conditions"
+							],
+							"query": [
+								{
+									"key": "age.value",
+									"value": "26"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "symptoms",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "{{interview-id}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{engine_base_url}}/symptoms/s_21?age.value=26",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"symptoms",
+								"s_21"
+							],
+							"query": [
+								{
+									"key": "age.value",
+									"value": "26"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "risk factors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "{{interview-id}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{engine_base_url}}/risk_factors?age.value=26",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"risk_factors"
+							],
+							"query": [
+								{
+									"key": "age.value",
+									"value": "26"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all medical concepts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "{{interview-id}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{engine_base_url}}/concepts",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"concepts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "{{interview-id}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{engine_base_url}}/search?phrase=i have a headache&age.value=26&sex=male",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "phrase",
+									"value": "i have a headache"
+								},
+								{
+									"key": "age.value",
+									"value": "26"
+								},
+								{
+									"key": "sex",
+									"value": "male"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "{{interview-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"age\": {\r\n        \"value\": 30,\r\n        \"unit\": \"year\"\r\n    },\r\n    \"sex\": \"male\",\r\n    \"text\": \"my urine burns when passing\",\r\n    \"context\": [\r\n        \"string\"\r\n    ],\r\n    \"include_tokens\": true,\r\n    \"correct_spelling\": true,\r\n    \"concept_types\": [\r\n        \"symptom\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{engine_base_url}}/parse",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"parse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suggest related concepts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "App-Id",
+								"value": "{{app-id}}",
+								"type": "text"
+							},
+							{
+								"key": "App-Key",
+								"value": "{{app-key}}",
+								"type": "text"
+							},
+							{
+								"key": "Dev-Mode",
+								"value": "true",
+								"type": "text"
+							},
+							{
+								"key": "Interview-Id",
+								"value": "{{interview-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"age\": {\r\n      \"value\": 26\r\n    },\r\n    \"sex\": \"male\",\r\n    \"evidence\": [\r\n      {\r\n        \"choice_id\": \"present\",\r\n        \"id\": \"s_39\",\r\n        \"source\": \"initial\"\r\n      }\r\n    ],\r\n    \"suggest_method\": \"symptoms\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{engine_base_url}}/suggest?max_results=12",
+							"host": [
+								"{{engine_base_url}}"
+							],
+							"path": [
+								"suggest"
+							],
+							"query": [
+								{
+									"key": "max_results",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{auth-token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"grant_type\": \"client_credentials\",\r\n    \"scope\": \"user:read user:write patient:read patient:write survey:read\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.infermedica.com/api/auth/token",
+					"protocol": "https",
+					"host": [
+						"api",
+						"infermedica",
+						"com"
+					],
+					"path": [
+						"api",
+						"auth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

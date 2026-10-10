@@ -1,0 +1,905 @@
+{
+	"info": {
+		"_postman_id": "0c7cafd9-375d-47d2-b796-021cb073c5aa",
+		"name": "GP Frontdesk",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16590534"
+	},
+	"item": [
+		{
+			"name": "fastAPI backend web service",
+			"item": [
+				{
+					"name": "authentication",
+					"item": [
+						{
+							"name": "login for access token",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/login/json",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login",
+										"json"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "read user (me)",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "uername",
+											"value": "himmat12",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "himmat12",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/me",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "register patient",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"himmat1241\",\r\n    \"email\": \"himmat1241@gmail.com\",\r\n    \"password\": \"himmat123\",\r\n    \"fullname\": \"Himmat Rai 03\",\r\n    \"dob\": \"1999-05-18\",\r\n    \"age\": 26,\r\n    \"gender\": \"Male\",\r\n    \"symptoms\": \"\",\r\n    \"conditions\": \"\",\r\n    \"phone\": \"9860867453\",\r\n    \"address\": \"Bede Hall, Leicester, LE2 7EQ\",\r\n    \"emergency_contact_name\": \"Bob Jack\",\r\n    \"emergency_contact_phone\": \"9867897645\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/patient-signup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"patient-signup"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "read users",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "care levels",
+					"item": [
+						{
+							"name": "get care levels",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/care-levels/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"care-levels",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create care levels",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"level_name\": \"Doctor within 7 Days\",\r\n    \"level_code\": \"P-D7D\",\r\n    \"description\": \"Visit the nearest clinic and consult with doctor within 7 days\",\r\n    \"is_active\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/care-levels/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"care-levels",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete care level",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/care-levels/5",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"care-levels",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "call sessions",
+					"item": [
+						{
+							"name": "create call session",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"patient_id\": 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/call-sessions/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"call-sessions",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "end call session",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/call-sessions/7/end",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"call-sessions",
+										"7",
+										"end"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "all call session by patient",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/call-sessions/patient/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"call-sessions",
+										"patient",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "all active call session by patient",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/call-sessions/patient/3/active",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"call-sessions",
+										"patient",
+										"3",
+										"active"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "patients",
+					"item": [
+						{
+							"name": "read patient",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/patients/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"patients",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "chat history",
+					"item": [
+						{
+							"name": "create chat",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"call_id\": 4,\r\n    \"speaker\": \"user\",\r\n    \"message_text\": \"Hello I am not feeling well!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/chat-history/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"chat-history",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "read chat history",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/chat-history/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"chat-history",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "diagnosis (interview)",
+					"item": [
+						{
+							"name": "create diagnosis",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"patient_id\": 3,\r\n    \"title\": \"Headache diagnosis interview\",\r\n    \"description\": \"Patient initiated this diagnosis interview by addressing headache and mild feever as initial symptoms\",\r\n    \"report\": \"this is a dumy json object string\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/diagnoses/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"diagnoses",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update diagnosis",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Headache diagnosis interview\",\r\n    \"description\": \"Patient initiated this diagnosis interview by addressing headache and mild feever as initial symptoms\",\r\n    \"report\": \"Only report gets update on this update request as we want our diagnosis (interview) report update on each stage which is symptoms intake -> UPDATE -> diagnosis -> UPDATE\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/diagnoses/{daiagnosis_id}/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"diagnoses",
+										"{daiagnosis_id}",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get diagnosis by id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/diagnoses/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"diagnoses",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "diagnosis session",
+					"item": [
+						{
+							"name": "create diagnosis session",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{prod_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"call_id\": 4,\r\n    \"diagnosis_id\": 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/diagnosis-sessions/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"diagnosis-sessions",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "check api health",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bot-server",
+			"item": [
+				{
+					"name": "run bot",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"room_url\": \"https://himmat-workstation.daily.co/71L2exJLOUm16fI93Inm\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyIjoiNzFMMmV4SkxPVW0xNmZJOTNJbm0iLCJvIjp0cnVlLCJkIjoiNmMwNzEwOWMtZGJjNS00NmI5LTk0YzEtNWZiZmQ5OTBiZjFhIiwiaWF0IjoxNzU0MDcwODI5fQ.q9S8jhd2f1dZTKK4zk-pSqvhytAQALWI8lggxwoz_0Y\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/run",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"run"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create room",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/create_room",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"create_room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get patient data - endpoint to test the backend sqllite data persistancy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/get_patient_data_test",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"get_patient_data_test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "debug environment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/debug_environment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"debug_environment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"room_name\": \"room01\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/create_token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"create_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api health check",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/check_api_health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"check_api_health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

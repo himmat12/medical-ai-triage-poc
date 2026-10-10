@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Diagnosis Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>🏥 Medical Diagnosis Dashboard</h1>
+            <p>Interactive visualization of medical consultation conversations and diagnosis results</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="jsonInput">Paste Medical Conversation JSON Data:</label>
+                <textarea id="jsonInput" class="json-input"
+                    placeholder="Paste your medical conversation JSON payload here..."></textarea>
+            </div>
+            <button onclick="processData()" class="btn">🔍 Analyze Conversation</button>
+            <div id="messageContainer"></div>
+        </div>
+
+        <div class="main-content">
+            <div class="conversation-panel">
+                <div class="conversation-header">
+                    💬 Conversation History
+                </div>
+                <div class="conversation-content" id="conversationContent">
+                    <div class="empty-state">
+                        No conversation data loaded. Please paste JSON data above and click "Analyze Conversation".
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-panel">
+                <div class="summary-header">
+                    📋 Patient Summary & Diagnosis
+                </div>
+                <div class="summary-content" id="summaryContent">
+                    <div class="empty-state">
+                        No patient data available. Load conversation data to see patient information and diagnosis
+                        results.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

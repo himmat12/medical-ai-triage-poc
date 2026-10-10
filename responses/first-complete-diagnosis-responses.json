@@ -1,0 +1,2230 @@
+[
+    [
+        {
+            "role": "system",
+            "content": "#Role: You are Lucy, a helpful and polite General practice assistant. Respond in clear and concise way and avoid using special characters and emojis and remember you are speaking with an actual human so make sure you maintain natural conversation flow by making your response short, clear and concise. Don't make assumptions about what values to plug into functions. Ask for clarification if a user response is ambiguous. CRITICAL: - Only respond ONCE after function calls complete. Do NOT repeat greetings or responses. - While responding temperature units of measurement use appropriate pronounciation for each units like \"90°C to Ninety Degree Celsius\" or \"90°F to Ninety Degree Fahrenheit\". - Be creative and polite while asking questions yet still making it clear and accurate with the actual information for patients to understand better."
+        },
+        {
+            "role": "system",
+            "content": "#Task: 1. First call get_patient_data function and wait for completion 2. Then call check_time function and wait for completion 3. After BOTH functions complete, greet the patient with \"Good [morning, afternoon, evening] [first name]\" 4. Introduce yourself briefly 5. And ask how you can help them IMPORTANT: - Execute functions SEQUENTIALLY, not in parallel - Do NOT generate responses until ALL required data is available - Do NOT repeat the greeting - After initial setup, wait for patient response To help the patient: - call get_general_practice_information function to provide information about the GP - call book_an_appointment function to book an appointment with GP - call run_symptoms_intake_assessment function if patient reports feeling unwell or mentions symptoms CRITICAL: If patient mentions feeling unwell, symptoms, or health concerns, IMMEDIATELY call run_symptoms_intake_assessment. If patient wants to end the conversation call to_end_conversation function."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_6wtozzPWKKUZ9krSNGpKiTyw",
+                    "function": {
+                        "name": "get_patient_data",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"patient_id\": \"p_001\", \"name\": \"Shafiq Shafi\", \"age\": 40, \"date_of_birth\": \"18/05/1976\", \"sex\": \"male\", \"phone\": \"9860867234\", \"address\": \"Bede Hall, Le2 7EQ, Leicester\", \"emergency_contact_name\": \"Bob Miller\", \"emergency_contact_phone\": \"9860876534\", \"symptoms\": [], \"conditions\": [], \"created_at\": \"\", \"updated_at\": \"\"}",
+            "tool_call_id": "call_6wtozzPWKKUZ9krSNGpKiTyw"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_cUIuuabPAiMJmMCDTyJm7zSA",
+                    "function": {
+                        "name": "check_time",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "\"11:49:03 PM\"",
+            "tool_call_id": "call_cUIuuabPAiMJmMCDTyJm7zSA"
+        },
+        {
+            "role": "assistant",
+            "content": "Good evening Shafiq. I am Lucy, your gene ral practice assistant. How can I help you today?"
+        },
+        {
+            "role": "user",
+            "content": "Hello, Lucy. I'm not feeling well. I've got headache and fever."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_1C7E4CJUTJTWpmYxKaCLRFk9",
+                    "function": {
+                        "name": "run_symptoms_intake_assessment",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Transitioning to symptoms assessment conversation.\"}",
+            "tool_call_id": "call_1C7E4CJUTJTWpmYxKaCLRFk9"
+        },
+        {
+            "role": "system",
+            "content": "#Tasks: 1. Ask how the patient is feeling or what specific symptoms they are experiencing. 2. Once you have specific symptoms mentioned by the patient, FIRST call parse_text function with: - text: the patient's symptom description - age: patient's age (from session data) - sex: patient's biological sex (from session data) 3. THEN call suggest function with: - age: patient's age - sex: patient's biological sex - evidence: list of evidence objects from parse_text result 4. From the suggested symptoms list, ask about each symptom seperately one at a time. 5. After each patient response, call store_evidence function ONLY if patient CONFIRMS they have that symptom. IMPORTANT FUNCTION CALLS: For parse_text: ``` parse_text( text=\"patient's symptom description here\", age=40, sex=\"male\" ) ``` For suggest (after getting evidence from parse_text): ``` suggest( age=40, sex=\"male\", evidence=[{\"id\": \"symptom_id\", \"choice_id\": \"present\", \"source\": \"initial\"}] ) ``` For store_evidence (when patient confirms symptom): ``` store_evidence( evidence={ \"id\": \"symptom_id_from_suggestions\", \"choice_id\": \"present\", \"source\": \"suggest\" } ) ``` CRITICAL RULES: - ALWAYS call parse_text BEFORE suggest when patient mentions specific symptoms - Use patient's age and sex from the session data (available from previous get_patient_data call) - ONLY call store_evidence AFTER patient CONFIRMS they have a specific symptom - Don't assume symptoms - ask for clarification if patient gives vague responses - The evidence parameter in suggest must be a list of evidence objects from parse_text - When storing evidence, choice_id should be \"present\", \"absent\", or \"unknown\" WORKFLOW: 1. Patient mentions symptoms → parse_text 2. Get evidence from parse_text → suggest with that evidence 3. Ask about each suggested symptom individually 4. Patient confirms/denies → store_evidence if confirmed 5. Continue until all symptoms checked 6. Thank patient → call run_diagnosis_assessment If patient wants to end conversation, call to_end_conversation function."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_hBVHV29tCvxiiGeM9jHZSpVm",
+                    "function": {
+                        "name": "process_text",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "CANCELLED",
+            "tool_call_id": "call_hBVHV29tCvxiiGeM9jHZSpVm"
+        },
+        {
+            "role": "user",
+            "content": "Hello Lucy, I'm not feeling well, I've got headache and fever"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_7ITGSqVVM8KUf1EuAJJBKODz",
+                    "function": {
+                        "name": "process_text",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"mentions\": [{\"id\": \"s_156\", \"name\": \"Nausea\", \"orth\": \"'m not feeling well\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [5, 6, 7, 8], \"head_position\": 7, \"common_name\": \"Feeling sick or queasy\"}, {\"id\": \"s_21\", \"name\": \"Headache\", \"orth\": \"headache\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [13], \"head_position\": 13, \"common_name\": \"Headache\"}, {\"id\": \"s_98\", \"name\": \"Fever\", \"orth\": \"fever\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [15], \"head_position\": 15, \"common_name\": \"Fever\"}, {\"id\": \"s_156\", \"name\": \"Nausea\", \"orth\": \"'m not feeling well\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [21, 22, 23, 24], \"head_position\": 23, \"common_name\": \"Feeling sick or queasy\"}, {\"id\": \"s_21\", \"name\": \"Headache\", \"orth\": \"headache\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [29], \"head_position\": 29, \"common_name\": \"Headache\"}, {\"id\": \"s_98\", \"name\": \"Fever\", \"orth\": \"fever\", \"type\": \"symptom\", \"choice_id\": \"present\", \"positions\": [31], \"head_position\": 31, \"common_name\": \"Fever\"}], \"obvious\": false, \"tokens\": [\"Hello\", \",\", \"Lucy\", \".\", \"I\", \"'m\", \"not\", \"feeling\", \"well\", \".\", \"I\", \"'ve\", \"got\", \"headache\", \"and\", \"fever\", \".\", \"Hello\", \"Lucy\", \",\", \"I\", \"'m\", \"not\", \"feeling\", \"well\", \",\", \"I\", \"'ve\", \"got\", \"headache\", \"and\", \"fever\"]}",
+            "tool_call_id": "call_7ITGSqVVM8KUf1EuAJJBKODz"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Dt1gWQzdXqfnUfMmAC2N0VkV",
+                    "function": {
+                        "name": "suggest_symptoms",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "[{\"id\": \"s_305\", \"name\": \"Vomiting\", \"common_name\": \"Vomiting\"}, {\"id\": \"s_2100\", \"name\": \"Fatigue\", \"common_name\": \"Fatigue\"}, {\"id\": \"s_284\", \"name\": \"Diminished appetite\", \"common_name\": \"Diminished appetite\"}, {\"id\": \"s_81\", \"name\": \"Chills\", \"common_name\": \"Chills\"}]",
+            "tool_call_id": "call_Dt1gWQzdXqfnUfMmAC2N0VkV"
+        },
+        {
+            "role": "assistant",
+            "content": "You mentioned having a headache and fever. Let's check for some additional symptoms. Do you also have vomiting?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_sJeJrOnU2cAgPhSuN8IT1a1E",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_305\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_305 recorded as absent\"}",
+            "tool_call_id": "call_sJeJrOnU2cAgPhSuN8IT1a1E"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_1VIrQG1Pg1pnmuyCvHr0fv0f",
+                    "function": {
+                        "name": "suggest_symptoms",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "[{\"id\": \"s_305\", \"name\": \"Vomiting\", \"common_name\": \"Vomiting\"}, {\"id\": \"s_2100\", \"name\": \"Fatigue\", \"common_name\": \"Fatigue\"}, {\"id\": \"s_284\", \"name\": \"Diminished appetite\", \"common_name\": \"Diminished appetite\"}, {\"id\": \"s_81\", \"name\": \"Chills\", \"common_name\": \"Chills\"}]",
+            "tool_call_id": "call_1VIrQG1Pg1pnmuyCvHr0fv0f"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you feel fatigued?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Uy6l3lRHpxzZD2KA1QMZPcuL",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2100\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2100 recorded as absent\"}",
+            "tool_call_id": "call_Uy6l3lRHpxzZD2KA1QMZPcuL"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_rnkXE7NzjLjsgDCVgipQnQiX",
+                    "function": {
+                        "name": "suggest_symptoms",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "[{\"id\": \"s_305\", \"name\": \"Vomiting\", \"common_name\": \"Vomiting\"}, {\"id\": \"s_2100\", \"name\": \"Fatigue\", \"common_name\": \"Fatigue\"}, {\"id\": \"s_284\", \"name\": \"Diminished appetite\", \"common_name\": \"Diminished appetite\"}, {\"id\": \"s_81\", \"name\": \"Chills\", \"common_name\": \"Chills\"}]",
+            "tool_call_id": "call_rnkXE7NzjLjsgDCVgipQnQiX"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a diminis hed appetite?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_yqI8lx5bVumzPbWggN5zjKWz",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_284\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_284 recorded as present\"}",
+            "tool_call_id": "call_yqI8lx5bVumzPbWggN5zjKWz"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_qDAfG27FSVPkmjNrX3fcMLMI",
+                    "function": {
+                        "name": "suggest_symptoms",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "[{\"id\": \"s_305\", \"name\": \"Vomiting\", \"common_name\": \"Vomiting\"}, {\"id\": \"s_2100\", \"name\": \"Fatigue\", \"common_name\": \"Fatigue\"}, {\"id\": \"s_284\", \"name\": \"Diminished appetite\", \"common_name\": \"Diminished appetite\"}, {\"id\": \"s_81\", \"name\": \"Chills\", \"common_name\": \"Chills\"}]",
+            "tool_call_id": "call_qDAfG27FSVPkmjNrX3fcMLMI"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you experience chills?"
+        },
+        {
+            "role": "user",
+            "content": "Can you elaborate more?"
+        },
+        {
+            "role": "assistant",
+            "content": "Chills are sensatio ns of coldness that often occur with fever. You may feel shivery or have goosebumps, and it can be accompanied by sweating. Do you feel any of th ese symptoms?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_EbD4pg4r8lje3DbH31kXiDs8",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_81\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_81 recorded as present\"}",
+            "tool_call_id": "call_EbD4pg4r8lje3DbH31kXiDs8"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_1AHGHMrq8n827OiOmyunDruK",
+                    "function": {
+                        "name": "run_diagnosis_assessment",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Transitioning to diagnosis assessment conversation.\"}",
+            "tool_call_id": "call_1AHGHMrq8n827OiOmyunDruK"
+        },
+        {
+            "role": "system",
+            "content": "#Task: Dynamic Medical Interview Based on Question Types You are conducting a medical interview using the Inframedica API. The API returns different types of questions that require different handling approaches. ## DETAILED EXAMPLE CONVERSATIONS: ### SINGLE TYPE EXAMPLE: API Response: { \"question\": { \"type\": \"single\", \"text\": \"Does the pain increase when you touch or press on the area around your ear?\", \"items\": [{\"id\": \"s_476\", \"name\": \"Pain increases when touching ear area\"}] } } Conversation Flow: Bot: \"Does the pain increase when you touch or press on the area around your ear?\" Patient: \"Yes, it does hurt more when I touch it\" Bot calls: store_evidence({\"id\": \"s_476\", \"choice_id\": \"present\"}) Bot calls: run_diagnosis() → Continue to next question ### GROUP_SINGLE TYPE EXAMPLE: API Response: { \"question\": { \"type\": \"group_single\", \"text\": \"What is your body temperature?\", \"items\": [ {\"id\": \"s_99\", \"name\": \"Between 99.5 and 101 °F (37 and 38 °C)\"}, {\"id\": \"s_100\", \"name\": \"Above 101 °F (38 °C)\"} ] } } Conversation Flow: Bot: \"What is your body temperature? Is it between 99.5 and 101 degrees Fahrenheit?\" Patient: \"No, it's higher than that\" Bot calls: store_evidence({\"id\": \"s_99\", \"choice_id\": \"absent\"}) Bot: \"Is your temperature above 101 degrees Fahrenheit?\" Patient: \"Yes, I think so\" Bot calls: store_evidence({\"id\": \"s_100\", \"choice_id\": \"present\"}) Bot calls: run_diagnosis() → Continue to next question ### GROUP_MULTIPLE TYPE EXAMPLE: API Response: { \"question\": { \"type\": \"group_multiple\", \"text\": \"How would you describe your headache?\", \"items\": [ {\"id\": \"s_25\", \"name\": \"Pulsing or throbbing\"}, {\"id\": \"s_604\", \"name\": \"Feels like 'stabbing' or 'drilling'\"}, {\"id\": \"s_23\", \"name\": \"Feels like pressure around my head\"} ] } } Conversation Flow: Bot: \"How would you describe your headache? Is it pulsing or throbbing?\" Patient: \"Yes, it's definitely pulsing\" Bot calls: store_evidence({\"id\": \"s_25\", \"choice_id\": \"present\"}) Bot: \"Does it feel like stabbing or drilling?\" Patient: \"No, not really\" Bot calls: store_evidence({\"id\": \"s_604\", \"choice_id\": \"absent\"}) Bot: \"Does it feel like pressure around your head?\" Patient: \"Yes, there's pressure too\" Bot calls: store_evidence({\"id\": \"s_23\", \"choice_id\": \"present\"}) Bot calls: run_diagnosis() → Continue to next question ## CONVERSATION FLOW RULES: 1. **Always start with run_diagnosis()** to get the question 2. **Check question type** and handle accordingly 3. **For single**: Ask once, get answer, store evidence, continue 4. **For group_single**: Ask about each item until patient says \"yes\" to one, mark others as \"absent\" 5. **For group_multiple**: Ask about each item individually, store each response 6. **After completing a question** (all items asked), call run_diagnosis() again 7. **Continue until** should_stop is true or error occurs ## IMPORTANT RESPONSE MAPPING: - Positive responses: \"Yes\", \"Yeah\", \"Uh-huh\", \"That's right\", \"Correct\" → \"present\" - Negative responses: \"No\", \"Nope\", \"Not really\", \"That's not it\" → \"absent\" - Uncertain responses: \"Don't know\", \"Maybe\", \"I'm not sure\", \"Could be\" → \"unknown\" ## CONVERSATION STATE TRACKING: - Keep track of which items in a group question you've asked about - For group_single: Ensure exactly one item is marked as \"present\" - For group_multiple: Ask about ALL items in the group - Don't repeat questions or skip items ## ERROR RECOVERY: - If patient gives unclear response, ask for clarification - If you get confused about question type, call run_diagnosis() again - Always be patient and conversational ## END CONDITIONS: - When run_diagnosis returns should_stop: true - When API returns error - When patient requests to end conversation Remember: Be natural and conversational while following the technical requirements for each question type. If patient wants to end the conversation call to_end_conversation function."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_lRyiTyUKTnuIEu0rAxFicJEa",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How long have you had a fever?\", \"items\": [{\"id\": \"s_2319\", \"name\": \"Less than 3 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2320\", \"name\": \"3 to 7 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2855\", \"name\": \"8 to 14 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2854\", \"name\": \"More than 14 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How long have you had a fever?\", \"items\": [{\"id\": \"s_2319\", \"name\": \"Less than 3 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2320\", \"name\": \"3 to 7 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2855\", \"name\": \"8 to 14 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2854\", \"name\": \"More than 14 days\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_lRyiTyUKTnuIEu0rAxFicJEa"
+        },
+        {
+            "role": "assistant",
+            "content": "How long have you had a fever? Is it less than 3 days?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_5Bh0oWlcUy07GRxK7xA8ehx7",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2319\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2319 recorded as present\"}",
+            "tool_call_id": "call_5Bh0oWlcUy07GRxK7xA8ehx7"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_3BYtxL1wRXH5hIV8UENhgZS3",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"What is your body temperature?\", \"items\": [{\"id\": \"s_99\", \"name\": \"Between 98.6\\u00b0F and 100.3\\u00b0F or 37\\u00b0C and 37.9\\u00b0C\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_100\", \"name\": \"Between 100.4\\u00b0F and 104\\u00b0F or 38\\u00b0C and 40\\u00b0C\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2000\", \"name\": \"More than 104\\u00b0F or 40\\u00b0C\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1820\", \"name\": \"It wasn't measured\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"What is your body temperature?\", \"items\": [{\"id\": \"s_99\", \"name\": \"Between 98.6\\u00b0F and 100.3\\u00b0F or 37\\u00b0C and 37.9\\u00b0C\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_100\", \"name\": \"Between 100.4\\u00b0F and 104\\u00b0F or 38\\u00b0C and 40\\u00b0C\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2000\", \"name\": \"More than 104\\u00b0F or 40\\u00b0C\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1820\", \"name\": \"It wasn't measured\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_3BYtxL1wRXH5hIV8UENhgZS3"
+        },
+        {
+            "role": "assistant",
+            "content": "What is your body temperature? Is it between nine ty-eight point six degrees Fahrenheit and one hundred p oint three degrees Fahrenheit or thirty-seven degrees Celsius and thirty-seven point nine degrees Celsius?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know. I've never measured it."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_seI5yHWm9seT4BCyuLntpAsH",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1820\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1820 recorded as present\"}",
+            "tool_call_id": "call_seI5yHWm9seT4BCyuLntpAsH"
+        },
+        {
+            "role": "user",
+            "content": "I don't know, I've never measured it."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_AyapX14R84NVuGBQLMyw5iQF",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How strong is the headache?\", \"items\": [{\"id\": \"s_1780\", \"name\": \"Mild\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1781\", \"name\": \"Moderate\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1193\", \"name\": \"Severe\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How strong is the headache?\", \"items\": [{\"id\": \"s_1780\", \"name\": \"Mild\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1781\", \"name\": \"Moderate\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1193\", \"name\": \"Severe\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_AyapX14R84NVuGBQLMyw5iQF"
+        },
+        {
+            "role": "assistant",
+            "content": "How strong is your headache? Is it mild?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_z1t3S26Wa56zWHCmib9nEpFA",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1780\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1780 recorded as absent\"}",
+            "tool_call_id": "call_z1t3S26Wa56zWHCmib9nEpFA"
+        },
+        {
+            "role": "user",
+            "content": "No. It's more it's more like moderate like, not mild. More more more than mild and, like, less than two extreme."
+        },
+        {
+            "role": "user",
+            "content": "It's more like moderate, like not mild."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_LSChN47pyvFX0FWOYlZPHHgS",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1781\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1781 recorded as present\"}",
+            "tool_call_id": "call_LSChN47pyvFX0FWOYlZPHHgS"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_k51Xd00FERT2ZsxKoZFk2HwW",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a sore throat?\", \"items\": [{\"id\": \"s_20\", \"name\": \"Pharyngeal pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a sore throat?\", \"items\": [{\"id\": \"s_20\", \"name\": \"Pharyngeal pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_k51Xd00FERT2ZsxKoZFk2HwW"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a sore throat?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_lJK1brZhtRJSyEheKxC8U58s",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_20\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_20 recorded as absent\"}",
+            "tool_call_id": "call_lJK1brZhtRJSyEheKxC8U58s"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_YAQVBhHxbFjvCZ1qKTgqgSvX",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"Where is the headache?\", \"items\": [{\"id\": \"s_24\", \"name\": \"All over the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2566\", \"name\": \"In a specific area of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2567\", \"name\": \"Don't know\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"Where is the headache?\", \"items\": [{\"id\": \"s_24\", \"name\": \"All over the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2566\", \"name\": \"In a specific area of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2567\", \"name\": \"Don't know\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_YAQVBhHxbFjvCZ1qKTgqgSvX"
+        },
+        {
+            "role": "assistant",
+            "content": "Where is your headache? Is it all over your head?"
+        },
+        {
+            "role": "user",
+            "content": "No. It's in front."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_nw758RFaGuPhCaoAO3c8HAfW",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2566\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2566 recorded as present\"}",
+            "tool_call_id": "call_nw758RFaGuPhCaoAO3c8HAfW"
+        },
+        {
+            "role": "user",
+            "content": "No, it's in front. Front and back."
+        },
+        {
+            "role": "user",
+            "content": "Front and back"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Z0kAHb2fTtJHMyYtdYXqNeEr",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2566\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2566 recorded as present\"}",
+            "tool_call_id": "call_Z0kAHb2fTtJHMyYtdYXqNeEr"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ChtVs82X2L6MwK64CFSjYjSJ",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Where is the headache?\", \"items\": [{\"id\": \"s_1349\", \"name\": \"Front of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_970\", \"name\": \"Back of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2568\", \"name\": \"On top of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1911\", \"name\": \"In the temple area\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Where is the headache?\", \"items\": [{\"id\": \"s_1349\", \"name\": \"Front of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_970\", \"name\": \"Back of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2568\", \"name\": \"On top of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1911\", \"name\": \"In the temple area\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_ChtVs82X2L6MwK64CFSjYjSJ"
+        },
+        {
+            "role": "assistant",
+            "content": "Where is your headache? Is it in the front of your head?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah. I said it's it's in front and back of my head. Both front and back."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_1hlDgjAX1gZ8KgzDIqYsED89",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1349\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1349 recorded as present\"}",
+            "tool_call_id": "call_1hlDgjAX1gZ8KgzDIqYsED89"
+        },
+        {
+            "role": "user",
+            "content": "Yeah I said it it's in front and back of my head both front and back."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_SYJW6x0T4d5aHy3LG7CazCwz",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_970\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_970 recorded as present\"}",
+            "tool_call_id": "call_SYJW6x0T4d5aHy3LG7CazCwz"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_OtOfru1AyoO4IsnhJb2sEjQr",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Where is the headache?\", \"items\": [{\"id\": \"s_2568\", \"name\": \"On top of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1911\", \"name\": \"In the temple area\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Where is the headache?\", \"items\": [{\"id\": \"s_2568\", \"name\": \"On top of the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1911\", \"name\": \"In the temple area\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_OtOfru1AyoO4IsnhJb2sEjQr"
+        },
+        {
+            "role": "assistant",
+            "content": "Is your headache on t op of your head?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_fbUcRIMISGE5RWfSpmu0HyaB",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2568\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2568 recorded as absent\"}",
+            "tool_call_id": "call_fbUcRIMISGE5RWfSpmu0HyaB"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_0WnuJGqhZhWnIS3y0wUIjdkx",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Is the headache on the side of your head, over the temples?\", \"items\": [{\"id\": \"s_1911\", \"name\": \"Headache, temporal region\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Is the headache on the side of your head, over the temples?\", \"items\": [{\"id\": \"s_1911\", \"name\": \"Headache, temporal region\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_0WnuJGqhZhWnIS3y0wUIjdkx"
+        },
+        {
+            "role": "assistant",
+            "content": "Is your headache on t he side of your head, over the temples?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_0jdWSoWTi74xi4Cusf6hd4Xr",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1911\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1911 recorded as present\"}",
+            "tool_call_id": "call_0jdWSoWTi74xi4Cusf6hd4Xr"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ULyXcbsfbWK0eITvNxyKj8sU",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a runny nose?\", \"items\": [{\"id\": \"s_107\", \"name\": \"Nasal catarrh\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a runny nose?\", \"items\": [{\"id\": \"s_107\", \"name\": \"Nasal catarrh\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_ULyXcbsfbWK0eITvNxyKj8sU"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a runny nose?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_IITeDNbbexkrnJ1rA9kK99MH",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_107\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_107 recorded as present\"}",
+            "tool_call_id": "call_IITeDNbbexkrnJ1rA9kK99MH"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_QeNBKEcZ5WsY1urvAYMNPBOw",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you smoke or have you smoked cigarettes in the past for at least 10 years?\", \"items\": [{\"id\": \"p_28\", \"name\": \"Smoking cigarettes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you smoke or have you smoked cigarettes in the past for at least 10 years?\", \"items\": [{\"id\": \"p_28\", \"name\": \"Smoking cigarettes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_QeNBKEcZ5WsY1urvAYMNPBOw"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you smoke or have you smoked cigarettes in the past for at least ten years?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_0FOBGa7RFSJGMobmaok1HGmd",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"p_28\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom p_28 recorded as absent\"}",
+            "tool_call_id": "call_0FOBGa7RFSJGMobmaok1HGmd"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_OEwcvEevkwp5948J57364CP4",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How long has the runny nose lasted?\", \"items\": [{\"id\": \"s_2845\", \"name\": \"Less than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2846\", \"name\": \"More than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How long has the runny nose lasted?\", \"items\": [{\"id\": \"s_2845\", \"name\": \"Less than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2846\", \"name\": \"More than 3 months\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_OEwcvEevkwp5948J57364CP4"
+        },
+        {
+            "role": "assistant",
+            "content": "How long has your run ny nose lasted? Is it less than three months?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_0zAx9sArzDxTpM3J7ZQaoZlP",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2845\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2845 recorded as present\"}",
+            "tool_call_id": "call_0zAx9sArzDxTpM3J7ZQaoZlP"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_K8jeSd4mMpFUUlndKvENDAom",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"How would you describe your nasal discharge?\", \"items\": [{\"id\": \"s_2154\", \"name\": \"Yellow or green\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2153\", \"name\": \"Clear or white\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"How would you describe your nasal discharge?\", \"items\": [{\"id\": \"s_2154\", \"name\": \"Yellow or green\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2153\", \"name\": \"Clear or white\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_K8jeSd4mMpFUUlndKvENDAom"
+        },
+        {
+            "role": "assistant",
+            "content": "How would you describ e your nasal discharge? Is it yellow or green?"
+        },
+        {
+            "role": "user",
+            "content": "No. It's not the yellow, not green. It's just like water."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ePKeNhn7NQXPDZuO4MiniErT",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2154\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2154 recorded as absent\"}",
+            "tool_call_id": "call_ePKeNhn7NQXPDZuO4MiniErT"
+        },
+        {
+            "role": "user",
+            "content": "No, it's not yellow, not green, it's just like water."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_JvJtuaQi1a9nQoDD0dtQ33Gv",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2153\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2153 recorded as present\"}",
+            "tool_call_id": "call_JvJtuaQi1a9nQoDD0dtQ33Gv"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Ldx8LmgQ54JB1VLNpgtbi78Q",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Which of the following changes to taste and smell do you have?\", \"items\": [{\"id\": \"s_1095\", \"name\": \"Sense of smell is lost or diminished, or smells are less intense\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1096\", \"name\": \"Sense of taste is lost or altered, or food tastes different than usual\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Which of the following changes to taste and smell do you have?\", \"items\": [{\"id\": \"s_1095\", \"name\": \"Sense of smell is lost or diminished, or smells are less intense\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1096\", \"name\": \"Sense of taste is lost or altered, or food tastes different than usual\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_Ldx8LmgQ54JB1VLNpgtbi78Q"
+        },
+        {
+            "role": "assistant",
+            "content": "Which of the followin g changes to taste and smell do you have? Is your sense of smel l lost or diminished, or are smells less intense?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_D45JZkaDyjapW6PkgojDs8Jy",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1095\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1095 recorded as unknown\"}",
+            "tool_call_id": "call_D45JZkaDyjapW6PkgojDs8Jy"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_dO7hr9BdBzpphUOGaNnTqNnG",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"How would you describe the headache?\", \"items\": [{\"id\": \"s_25\", \"name\": \"Throbbing or pulsating\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_604\", \"name\": \"Stabbing or piercing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_23\", \"name\": \"Feels like pressure around the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"How would you describe the headache?\", \"items\": [{\"id\": \"s_25\", \"name\": \"Throbbing or pulsating\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_604\", \"name\": \"Stabbing or piercing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_23\", \"name\": \"Feels like pressure around the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_dO7hr9BdBzpphUOGaNnTqNnG"
+        },
+        {
+            "role": "assistant",
+            "content": "How would you describ e your headache? Is it throbbing or pulsating?"
+        },
+        {
+            "role": "user",
+            "content": "It's"
+        },
+        {
+            "role": "assistant",
+            "content": "Could you"
+        },
+        {
+            "role": "user",
+            "content": "pulsating, I guess."
+        },
+        {
+            "role": "user",
+            "content": "Once setting again"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_trgg6OEOwTZtTUFthtxDBazb",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_25\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_25 recorded as present\"}",
+            "tool_call_id": "call_trgg6OEOwTZtTUFthtxDBazb"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_M0zCOu5SbhaXcIMQF3RZdkS7",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you clear your throat often?\", \"items\": [{\"id\": \"s_1094\", \"name\": \"Clearing the throat\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you clear your throat often?\", \"items\": [{\"id\": \"s_1094\", \"name\": \"Clearing the throat\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_M0zCOu5SbhaXcIMQF3RZdkS7"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you clear your thr oat often?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_m5vdFgxhP5hJnBUSCyXpd0yL",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1094\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1094 recorded as absent\"}",
+            "tool_call_id": "call_m5vdFgxhP5hJnBUSCyXpd0yL"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_e3k0ec7jDvHzeg6VwcDatRrl",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"How would you describe the headache?\", \"items\": [{\"id\": \"s_604\", \"name\": \"Stabbing or piercing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_23\", \"name\": \"Feels like pressure around the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"How would you describe the headache?\", \"items\": [{\"id\": \"s_604\", \"name\": \"Stabbing or piercing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_23\", \"name\": \"Feels like pressure around the head\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_e3k0ec7jDvHzeg6VwcDatRrl"
+        },
+        {
+            "role": "assistant",
+            "content": "How would you describ e your headache? Is it stabbing or piercing?"
+        },
+        {
+            "role": "user",
+            "content": "Like, piercing."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_sr66TvGriEcDggECCoIJfAu9",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_604\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_604 recorded as present\"}",
+            "tool_call_id": "call_sr66TvGriEcDggECCoIJfAu9"
+        },
+        {
+            "role": "user",
+            "content": "Lip piercing."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_KgnGSFSvnZKRlO0Yly6gnEWB",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Is the headache only on one side of your head?\", \"items\": [{\"id\": \"s_22\", \"name\": \"Headache, unilateral\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Is the headache only on one side of your head?\", \"items\": [{\"id\": \"s_22\", \"name\": \"Headache, unilateral\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_KgnGSFSvnZKRlO0Yly6gnEWB"
+        },
+        {
+            "role": "assistant",
+            "content": "Is your headache only on one side of your head?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_dr63IiKlExLKiVBsVfGSnXDP",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_22\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_22 recorded as absent\"}",
+            "tool_call_id": "call_dr63IiKlExLKiVBsVfGSnXDP"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_YA5BmfdhLkHoLZ8YbRtYnRsW",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are your eyes watery, or is either eye making more tears than usual?\", \"items\": [{\"id\": \"s_122\", \"name\": \"Excessive tear production\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are your eyes watery, or is either eye making more tears than usual?\", \"items\": [{\"id\": \"s_122\", \"name\": \"Excessive tear production\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_YA5BmfdhLkHoLZ8YbRtYnRsW"
+        },
+        {
+            "role": "assistant",
+            "content": "Are your eyes water y, or is either eye making more tears than usual?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_lVuRNm9iKAC3yj7Cjc5PgzmH",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_122\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_122 recorded as absent\"}",
+            "tool_call_id": "call_lVuRNm9iKAC3yj7Cjc5PgzmH"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_QSYECTbP6DeNKhtbfqtSK5Ji",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you feel like you have mucus dripping down the back of your throat?\", \"items\": [{\"id\": \"s_1471\", \"name\": \"Postnasal drip\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you feel like you have mucus dripping down the back of your throat?\", \"items\": [{\"id\": \"s_1471\", \"name\": \"Postnasal drip\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_QSYECTbP6DeNKhtbfqtSK5Ji"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you feel like you have mucus dripping down the back of your throat?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_wmh8hFsHs3zVYjFsMaU1dY2k",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1471\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1471 recorded as unknown\"}",
+            "tool_call_id": "call_wmh8hFsHs3zVYjFsMaU1dY2k"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_Hr8NjFva2lXbhFJLnMg3uSMO",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Which of the following causes or worsens the headache?\", \"items\": [{\"id\": \"s_799\", \"name\": \"Morning hours\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1762\", \"name\": \"Stress\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_625\", \"name\": \"Bending head down\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1871\", \"name\": \"Physical activity\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Which of the following causes or worsens the headache?\", \"items\": [{\"id\": \"s_799\", \"name\": \"Morning hours\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1762\", \"name\": \"Stress\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_625\", \"name\": \"Bending head down\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1871\", \"name\": \"Physical activity\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_Hr8NjFva2lXbhFJLnMg3uSMO"
+        },
+        {
+            "role": "assistant",
+            "content": "Which of the followin g causes or worsens your headache? Does it occur more du ring the morning hours?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_2ptx7XwYackwzHEGTpGvwizc",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_799\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_799 recorded as present\"}",
+            "tool_call_id": "call_2ptx7XwYackwzHEGTpGvwizc"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_QNRR2HIE3jF3otbkLj991VwK",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Which of the following causes or worsens the headache?\", \"items\": [{\"id\": \"s_1762\", \"name\": \"Stress\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_625\", \"name\": \"Bending head down\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1871\", \"name\": \"Physical activity\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Which of the following causes or worsens the headache?\", \"items\": [{\"id\": \"s_1762\", \"name\": \"Stress\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_625\", \"name\": \"Bending head down\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1871\", \"name\": \"Physical activity\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_QNRR2HIE3jF3otbkLj991VwK"
+        },
+        {
+            "role": "assistant",
+            "content": "Does stress cause or worsen your headache?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_IZTTceBgamjzwgFXWm92wr2s",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1762\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1762 recorded as unknown\"}",
+            "tool_call_id": "call_IZTTceBgamjzwgFXWm92wr2s"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_MfHrZn4lXCTXjG3inm1AMjOg",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"Is your headache a new episode, or is it part of a chronic or recurring pattern?\", \"items\": [{\"id\": \"s_3397\", \"name\": \"It's a new episode of headache, distinct from any chronic or recurrent headaches from the past\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_3398\", \"name\": \"Similar headaches keep coming back, but for less than a month\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_3399\", \"name\": \"Similar headaches keep coming back for more than a month\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"Is your headache a new episode, or is it part of a chronic or recurring pattern?\", \"items\": [{\"id\": \"s_3397\", \"name\": \"It's a new episode of headache, distinct from any chronic or recurrent headaches from the past\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_3398\", \"name\": \"Similar headaches keep coming back, but for less than a month\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_3399\", \"name\": \"Similar headaches keep coming back for more than a month\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_MfHrZn4lXCTXjG3inm1AMjOg"
+        },
+        {
+            "role": "assistant",
+            "content": "Is your headache a ne w episode, or is it part of a chronic or recurring pattern? Is it a new epis ode distinct from any chronic or recurrent headaches from the past?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_X6bx4vDLB9y70i6IWRnDY0gf",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_3397\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_3397 recorded as absent\"}",
+            "tool_call_id": "call_X6bx4vDLB9y70i6IWRnDY0gf"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_YzP7VEFjVpayoJHnu2AXX0yN",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Which of the following causes or worsens the headache?\", \"items\": [{\"id\": \"s_625\", \"name\": \"Bending head down\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1871\", \"name\": \"Physical activity\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Which of the following causes or worsens the headache?\", \"items\": [{\"id\": \"s_625\", \"name\": \"Bending head down\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1871\", \"name\": \"Physical activity\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_YzP7VEFjVpayoJHnu2AXX0yN"
+        },
+        {
+            "role": "assistant",
+            "content": "Which of the followin g causes or worsens your headache? Does bending your hea d down make it worse?"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_HXDW0pHT8pl2k7qtv4JI329v",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_625\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_625 recorded as unknown\"}",
+            "tool_call_id": "call_HXDW0pHT8pl2k7qtv4JI329v"
+        },
+        {
+            "role": "user",
+            "content": "I don't know."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_LvFDOn7cmMRHQM3l2PVUII3s",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are you more short-tempered, nervous, or irritable than usual?\", \"items\": [{\"id\": \"s_540\", \"name\": \"Irritability\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are you more short-tempered, nervous, or irritable than usual?\", \"items\": [{\"id\": \"s_540\", \"name\": \"Irritability\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_LvFDOn7cmMRHQM3l2PVUII3s"
+        },
+        {
+            "role": "assistant",
+            "content": "Are you more short-te mpered, nervous, or irritable than usual?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_a6fSGO0P7HoLc1Etg41vTk4d",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_540\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_540 recorded as present\"}",
+            "tool_call_id": "call_a6fSGO0P7HoLc1Etg41vTk4d"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_HgJGreLvMtRvuw4e5i2YZGOY",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have pain in any part of your face?\", \"items\": [{\"id\": \"s_478\", \"name\": \"Facial pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have pain in any part of your face?\", \"items\": [{\"id\": \"s_478\", \"name\": \"Facial pain\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_HgJGreLvMtRvuw4e5i2YZGOY"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have pain in a ny part of your face?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_tP507mQHIFL6EIaNPLy6Y6M2",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_478\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_478 recorded as absent\"}",
+            "tool_call_id": "call_tP507mQHIFL6EIaNPLy6Y6M2"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_u5DOwV25bBVCjV6XIHg6pyuk",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are any lymph glands swollen, such as those in the neck, behind the ears, under the arms, or anywhere else?\", \"items\": [{\"id\": \"s_220\", \"name\": \"Enlarged lymph nodes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are any lymph glands swollen, such as those in the neck, behind the ears, under the arms, or anywhere else?\", \"items\": [{\"id\": \"s_220\", \"name\": \"Enlarged lymph nodes\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_u5DOwV25bBVCjV6XIHg6pyuk"
+        },
+        {
+            "role": "assistant",
+            "content": "Are any lymph glan ds swollen, such as those in your neck, behind your ears, under your arms, or anywhere else?"
+        },
+        {
+            "role": "user",
+            "content": "I have no idea."
+        },
+        {
+            "role": "user",
+            "content": "I have no idea."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_vlJeM4va9GHNnADYxZXm6dQU",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_220\", \"choice_id\": \"unknown\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_220 recorded as unknown\"}",
+            "tool_call_id": "call_vlJeM4va9GHNnADYxZXm6dQU"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_FWjstrmyRx20Wh1prggV4Qe0",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Do any of these make it physically hard or uncomfortable to speak?\", \"items\": [{\"id\": \"s_68\", \"name\": \"Hoarse or raspy voice\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_477\", \"name\": \"No sound comes out when trying to speak\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_95\", \"name\": \"Discomfort or pain in the lower half of the face or mouth while speaking\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Do any of these make it physically hard or uncomfortable to speak?\", \"items\": [{\"id\": \"s_68\", \"name\": \"Hoarse or raspy voice\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_477\", \"name\": \"No sound comes out when trying to speak\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_95\", \"name\": \"Discomfort or pain in the lower half of the face or mouth while speaking\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_FWjstrmyRx20Wh1prggV4Qe0"
+        },
+        {
+            "role": "assistant",
+            "content": "Do any of these make it physically hard or uncomfortable to speak? Do you have a hoarse or raspy voice?"
+        },
+        {
+            "role": "user",
+            "content": "Hello?"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a hoarse or raspy voice?"
+        },
+        {
+            "role": "user",
+            "content": "No. I saved no."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_TlyLOidvdbddTTjyvQ5icm21",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_68\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_68 recorded as absent\"}",
+            "tool_call_id": "call_TlyLOidvdbddTTjyvQ5icm21"
+        },
+        {
+            "role": "user",
+            "content": "No, I said no."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_V2wXjlbONsTwmt7cHGIyC5hD",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_multiple\", \"text\": \"Do any of these make it physically hard or uncomfortable to speak?\", \"items\": [{\"id\": \"s_477\", \"name\": \"No sound comes out when trying to speak\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_95\", \"name\": \"Discomfort or pain in the lower half of the face or mouth while speaking\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_multiple\", \"question_text\": \"Do any of these make it physically hard or uncomfortable to speak?\", \"items\": [{\"id\": \"s_477\", \"name\": \"No sound comes out when trying to speak\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_95\", \"name\": \"Discomfort or pain in the lower half of the face or mouth while speaking\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_V2wXjlbONsTwmt7cHGIyC5hD"
+        },
+        {
+            "role": "assistant",
+            "content": "Do any of these make it physically hard or uncomfortable to speak? Does no sound come ou t when you try to speak?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_EbWPSORQ9ZM8bQFpcfG0c9Th",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_477\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_477 recorded as absent\"}",
+            "tool_call_id": "call_EbWPSORQ9ZM8bQFpcfG0c9Th"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_r1zzYpZ4QUFSbhmd5b1LrhEr",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have pain or discomfort in your mouth, nose, or lower half of your face while speaking?\", \"items\": [{\"id\": \"s_95\", \"name\": \"Discomfort while speaking, maxillo-facial\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have pain or discomfort in your mouth, nose, or lower half of your face while speaking?\", \"items\": [{\"id\": \"s_95\", \"name\": \"Discomfort while speaking, maxillo-facial\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_r1zzYpZ4QUFSbhmd5b1LrhEr"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have pain or d iscomfort in your mouth, nose, or lower half of your face while speaking?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_KSTCGHxJcKRO3yeMdOjYaxYN",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_95\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_95 recorded as absent\"}",
+            "tool_call_id": "call_KSTCGHxJcKRO3yeMdOjYaxYN"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_0tqE0wwwL4fBsISvk0SxThkv",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you breathe through your mouth more than your nose?\", \"items\": [{\"id\": \"s_1104\", \"name\": \"Mouth breathing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you breathe through your mouth more than your nose?\", \"items\": [{\"id\": \"s_1104\", \"name\": \"Mouth breathing\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_0tqE0wwwL4fBsISvk0SxThkv"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you breathe throug h your mouth more than your nose?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_NthpdefxGXgdZKZc5G4TP0Ji",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1104\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1104 recorded as absent\"}",
+            "tool_call_id": "call_NthpdefxGXgdZKZc5G4TP0Ji"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_ktYQxKA5zfDEoH7MkgGSvelX",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Has your voice become more nasal lately?\", \"items\": [{\"id\": \"s_1303\", \"name\": \"Nasal speech\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Has your voice become more nasal lately?\", \"items\": [{\"id\": \"s_1303\", \"name\": \"Nasal speech\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_ktYQxKA5zfDEoH7MkgGSvelX"
+        },
+        {
+            "role": "assistant",
+            "content": "Has your voice become more nasal lately?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_8uoh61zSFa7JO3lGgJzY9EXq",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_1303\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_1303 recorded as present\"}",
+            "tool_call_id": "call_8uoh61zSFa7JO3lGgJzY9EXq"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_SE7pg5N3Ldh95lqiYK8ABLCy",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have difficulty speaking?\", \"items\": [{\"id\": \"s_2754\", \"name\": \"Speech and language impairment\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have difficulty speaking?\", \"items\": [{\"id\": \"s_2754\", \"name\": \"Speech and language impairment\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_SE7pg5N3Ldh95lqiYK8ABLCy"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have difficult y speaking?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_HJIi36pw1v7WXCc06PpPeOsz",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_2754\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_2754 recorded as absent\"}",
+            "tool_call_id": "call_HJIi36pw1v7WXCc06PpPeOsz"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_k1YfEAtJTPoNVg6xZM74V9Ew",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Is your nose or throat itchy or tingly?\", \"items\": [{\"id\": \"s_252\", \"name\": \"Itching nose or throat\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Is your nose or throat itchy or tingly?\", \"items\": [{\"id\": \"s_252\", \"name\": \"Itching nose or throat\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_k1YfEAtJTPoNVg6xZM74V9Ew"
+        },
+        {
+            "role": "assistant",
+            "content": "Is your nose or throa t itchy or tingly?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "user",
+            "content": "No"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_2sK7QGfYf0d5FZdXVALQUlVy",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_252\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_252 recorded as absent\"}",
+            "tool_call_id": "call_2sK7QGfYf0d5FZdXVALQUlVy"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_tAII3zMAfVJMITlS3miqnpPf",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Do you have a cough?\", \"items\": [{\"id\": \"s_102\", \"name\": \"Cough\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Do you have a cough?\", \"items\": [{\"id\": \"s_102\", \"name\": \"Cough\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_tAII3zMAfVJMITlS3miqnpPf"
+        },
+        {
+            "role": "assistant",
+            "content": "Do you have a cough?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_wSNyNEqp61yesiWajzo0HWKe",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_102\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_102 recorded as present\"}",
+            "tool_call_id": "call_wSNyNEqp61yesiWajzo0HWKe"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_DdUem2he03YiCx2SmrPmQtNd",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How would you describe the cough?\", \"items\": [{\"id\": \"s_105\", \"name\": \"Dry cough, without phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_104\", \"name\": \"Wet cough, with phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2268\", \"name\": \"Both a dry and wet cough, with phlegm or mucus appearing occasionally throughout the day\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How would you describe the cough?\", \"items\": [{\"id\": \"s_105\", \"name\": \"Dry cough, without phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_104\", \"name\": \"Wet cough, with phlegm or mucus\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_2268\", \"name\": \"Both a dry and wet cough, with phlegm or mucus appearing occasionally throughout the day\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_DdUem2he03YiCx2SmrPmQtNd"
+        },
+        {
+            "role": "assistant",
+            "content": "How would you describ e your cough? Is  it a dry cough, w ithout phlegm or mucus?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_kbWEwcMNnqFvnYJpHJJw6wL3",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_105\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_105 recorded as present\"}",
+            "tool_call_id": "call_kbWEwcMNnqFvnYJpHJJw6wL3"
+        },
+        {
+            "role": "user",
+            "content": "Yeah"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_BvofeXr1wkG5Diio4e6snNIe",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"group_single\", \"text\": \"How long have you had a cough?\", \"items\": [{\"id\": \"s_103\", \"name\": \"Less than 3 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1858\", \"name\": \"Between 3 and 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_106\", \"name\": \"More than 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"group_single\", \"question_text\": \"How long have you had a cough?\", \"items\": [{\"id\": \"s_103\", \"name\": \"Less than 3 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_1858\", \"name\": \"Between 3 and 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}, {\"id\": \"s_106\", \"name\": \"More than 8 weeks\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_BvofeXr1wkG5Diio4e6snNIe"
+        },
+        {
+            "role": "assistant",
+            "content": "How long have you had a cough? Is it less than three weeks?"
+        },
+        {
+            "role": "user",
+            "content": "Yeah."
+        },
+        {
+            "role": "user",
+            "content": "Yeah"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_m5INcHpwx8f9VSvV76hnz8yk",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_103\", \"choice_id\": \"present\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_103 recorded as present\"}",
+            "tool_call_id": "call_m5INcHpwx8f9VSvV76hnz8yk"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_DL4MdGv7jb5rMo7lbGOl7vdR",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"should_stop\": false, \"question\": {\"type\": \"single\", \"text\": \"Are you sweating more than usual?\", \"items\": [{\"id\": \"s_216\", \"name\": \"Excessive sweating\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}], \"extras\": {}}, \"question_type\": \"single\", \"question_text\": \"Are you sweating more than usual?\", \"items\": [{\"id\": \"s_216\", \"name\": \"Excessive sweating\", \"choices\": [{\"id\": \"present\", \"label\": \"Yes\"}, {\"id\": \"absent\", \"label\": \"No\"}, {\"id\": \"unknown\", \"label\": \"Don't know\"}]}]}",
+            "tool_call_id": "call_DL4MdGv7jb5rMo7lbGOl7vdR"
+        },
+        {
+            "role": "assistant",
+            "content": "Are you sweating more than usual?"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_D6HOTCnMYQMaRi3qbvSKlLgY",
+                    "function": {
+                        "name": "store_evidence",
+                        "arguments": "{\"id\": \"s_216\", \"choice_id\": \"absent\", \"source\": \"suggest\"}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "{\"status\": \"success\", \"message\": \"Symptom s_216 recorded as absent\"}",
+            "tool_call_id": "call_D6HOTCnMYQMaRi3qbvSKlLgY"
+        },
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_GKuMBdD7WG4llEoLJFyQK3ww",
+                    "function": {
+                        "name": "run_diagnosis",
+                        "arguments": "{}"
+                    },
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "role": "tool",
+            "content": "CANCELLED",
+            "tool_call_id": "call_GKuMBdD7WG4llEoLJFyQK3ww"
+        },
+        {
+            "role": "user",
+            "content": "No."
+        }
+    ]
+]

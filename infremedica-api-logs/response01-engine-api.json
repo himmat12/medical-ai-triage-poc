@@ -1,0 +1,51 @@
+{
+    "question": {
+        "type": "single",
+        "text": "Do you have pain around or behind your eye?",
+        "items": [
+            {
+                "id": "s_54",
+                "name": "Pain near eye socket",
+                "choices": [
+                    {
+                        "id": "present",
+                        "label": "Yes"
+                    },
+                    {
+                        "id": "absent",
+                        "label": "No"
+                    },
+                    {
+                        "id": "unknown",
+                        "label": "Don't know"
+                    }
+                ]
+            }
+        ],
+        "extras": {}
+    },
+    "conditions": [
+        {
+            "id": "c_39",
+            "name": "Cluster headaches",
+            "common_name": "Cluster headaches",
+            "probability": 0.6802
+        },
+        {
+            "id": "c_49",
+            "name": "Migraine",
+            "common_name": "Migraine",
+            "probability": 0.1577
+        },
+        {
+            "id": "c_87",
+            "name": "Common cold",
+            "common_name": "Common cold",
+            "probability": 0.1425
+        }
+    ],
+    "extras": {},
+    "has_emergency_evidence": false,
+    "should_stop": false,
+    "interview_token": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJQYXRpZW50RWR1Y2F0aW9uUmV2aXNpb25zIiwidG9rZW5QYXlsb2FkIjp7ImFnZUJ1bmRsZSI6IkFEVUxUIiwicGF0aWVudEVkdWNhdGlvblJldmlzaW9ucyI6eyJjXzg3IjoiNSIsImNfNDkiOiI1In19LCJpYXQiOjE3NTA3MjgwMDJ9.rRMRGSue52pEVLAH0wNtKrajQ8ShUT3FUgK0110aY-k"
+}

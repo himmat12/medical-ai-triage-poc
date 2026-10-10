@@ -1,0 +1,122 @@
+{
+    "sex": "male",
+    "age": {
+        "value": 30
+    },
+    "evidence": [
+        {
+            "id": "s_1193",
+            "choice_id": "present",
+            "source": "initial"
+        },
+        {
+            "id": "s_488",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_418",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_24",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_2568",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_3399",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_22",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_156",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_1349",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_124",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_1483",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_631",
+            "choice_id": "absent"
+        },
+
+
+        {
+            "id": "s_107",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_2846",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_2845",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_2153",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_605",
+            "choice_id": "present"
+        },
+
+
+        {
+            "id": "s_54",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_122",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_604",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_20",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_2764",
+            "choice_id": "absent"
+        },
+
+        
+        {
+            "id": "s_493",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_2987",
+            "choice_id": "absent"
+        },
+        {
+            "id": "s_1911",
+            "choice_id": "present"
+        },
+        {
+            "id": "s_540",
+            "choice_id": "present"
+        }
+    ],
+    "extras": {
+        "disable_groups": true
+    }
+}
