@@ -6,6 +6,7 @@
 
 > #### ACE Internship Completion [CERTIFICATE](./CERTIFICATE.pdf)
 
+> *NOTE: This project started from June till the end of July 2025 and was delivered and handed over on 30th June 2025.*
 
 ## Getting started
 
