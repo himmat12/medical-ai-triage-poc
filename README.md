@@ -1,9 +1,10 @@
-# Medical AI Triage Conversational Voice Bot 
+# Medical AI Triage - Real-time Conversational Voice Bot 
 
 > #### IMPORTANT: Inframedica API services won't be working as it was only given access for limited period of time for testing the service - reachout to Inframedica to get access of the API key.
 
-> #### [Agent Demo](./resources/voice_agent_demo.mp3)
-The demo is a `.mp3` file you need to download to check the agent in action.
+> #### [Agent Demo](./resources/voice_agent_demo.mp3) <br> The demo is a `.mp3` file you need to download to check the agent in action.
+
+> #### ACE Internship Completion [CERTIFICATE](./CERTIFICATE.pdf)
 
 
 ## Getting started
